@@ -19,8 +19,13 @@ while running :
     screen.blit(background,(0,0))
     #Appliquer image de notre joueur#
     screen.blit(game.player.image, game.player.rect)
+    #récupérer tout les projectiles du joueur #
+    for projectile in game.player.all_projectiles :
+        projectile.move()
+    #Appliquer l'ensemble de mon grp de projectiles#
+    game.player.all_projectiles.draw(screen)
     #vérifier si le joueur souhaite bouger#
-    if game.pressed.get(pygame.K_DOWN) and game.player.rect.y + game.player.rect.width < screen.get_height():
+    if game.pressed.get(pygame.K_DOWN) and game.player.rect.y + (game.player.rect.height)/2 < screen.get_height():
         game.player.move_down()
     elif game.pressed.get(pygame.K_UP) and game.player.rect.y > 0:
         game.player.move_up()
@@ -28,6 +33,8 @@ while running :
         game.player.move_right()
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0-(game.player.rect.width)/2 :
         game.player.move_left()
+    else:
+        game.player.no_move()
     #mettre à jour l'écran #
     pygame.display.flip()
     #fermeture du jeu#
@@ -38,5 +45,7 @@ while running :
             print("fermeture du jeu")
         elif event.type == pygame.KEYDOWN :
             game.pressed[event.key]=True
+            if event.key == pygame.K_SPACE:
+                game.player.launch_projectile()
         elif event.type == pygame.KEYUP :
             game.pressed[event.key] = False
