@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 3
         self.max_health = 3
         self.attack = 10
-        self.velocity = 2.7
+        self.velocity = 2.6
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/_0000_Layer-1.png')
         self.image = pygame.transform.scale(self.image, (80,80))
