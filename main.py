@@ -9,7 +9,7 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("SpaceShoot")
 screen = pygame.display.set_mode((400, 600))
 #background#
-background = pygame.image.load('assets/fond/frameBackground.png')
+background = pygame.image.load('pythonProject/assets/fond/frameBackground.png')
 background = pygame.transform.scale(background,(400,600))
 y_background = 0
 
