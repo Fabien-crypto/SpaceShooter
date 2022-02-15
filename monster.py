@@ -26,7 +26,9 @@ class Monster(pygame.sprite.Sprite):
         if now - self.last_monster > self.delay_spawn :
             self.all_monsters.add(monster)
             self.last_monster = now
+
     def remove(self):
+        #on enlève les ennemies de la map#
         self.all_monsters.remove(self)
 
     def forward(self):
