@@ -13,6 +13,7 @@ class Laser_ennemie(pygame.sprite.Sprite) :
         self.rect.y = monster.rect.y
     def remove(self):
         self.monster.all_laser.remove(self)
+    #classe mouvement du laser #
     def move(self):
         self.rect.y += self.velocity
         from main import screen
