@@ -1,9 +1,17 @@
 import time
 import pygame
-import os
+from pygame import mixer
 from game import Game
 pygame.init()
-cdir = format(os.getcwd())
+
+
+
+
+#Musique de fond
+mixer.init()
+mixer.music.load('sounds/bensound-summer_ogg_music.ogg')
+mixer.music.play()
+
 #Temps du jeu #
 clock = pygame.time.Clock()
 # Générer une fenêtre de jeu #
