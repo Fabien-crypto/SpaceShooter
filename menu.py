@@ -1,5 +1,12 @@
 import pygame
  
+
+#Icone jeu#
+a = pygame.image.load('assets/vaisseaux/nomove.png')
+pygame.display.set_icon(a)
+
+
+
 surfaceW = 400 #Dimension de la fenêtre / Largeur
 surfaceH = 600 #Dimension de la fenêtre / Longueur
 

@@ -6,7 +6,6 @@ pygame.init()
 
 
 
-
 #Musique de fond
 mixer.init()
 mixer.music.load('sounds/bensound-summer_ogg_music.ogg')
