@@ -43,7 +43,7 @@ def options():
 
         SCREEN.fill("black")
 
-        OPTIONS_TEXT = get_font(12).render("Choisir tes aprametres.", True, "white")
+        OPTIONS_TEXT = get_font(12).render("Choisir tes paramètres.", True, "white")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(200, 260))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
@@ -74,9 +74,9 @@ def main_menu():
 
         PLAY_BUTTON = Button(image=pygame.image.load("assets/menu/Play Rect.png"), pos=(200, 200), 
                             text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/menu/Options Rect.png"), pos=(200, 350), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/menu/Options Rect.png"), pos=(200, 280), 
                             text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/menu/Quit Rect.png"), pos=(200, 500), 
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/menu/Quit Rect.png"), pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
