@@ -4,7 +4,9 @@ from pygame import mixer
 from game import Game
 pygame.init()
 
-
+#Icone jeu#
+a = pygame.image.load('assets/vaisseaux/nomove.png')
+pygame.display.set_icon(a)
 
 #Musique de fond
 mixer.init()
