@@ -9,7 +9,7 @@ pygame.init()
 
 #Musique de fond
 mixer.init()
-mixer.music.load('sounds/bensound-summer_ogg_music.ogg')
+mixer.music.load('sounds/10 Drummed vaus.mp3')
 mixer.music.play()
 
 #Temps du jeu #
@@ -59,21 +59,16 @@ while running :
         game.player.launch_projectile()
     if game.pressed.get(pygame.K_DOWN) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
         game.player.move_down()
-        if game.pressed.get(pygame.K_SPACE):
-            game.player.launch_projectile()
     if game.pressed.get(pygame.K_UP) and game.player.rect.y > 0:
         game.player.move_up()
-        if game.pressed.get(pygame.K_SPACE):
-            game.player.launch_projectile()
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x + (game.player.rect.width) / 2 < screen.get_width():
+    if game.pressed.get(pygame.K_RIGHT):
         game.player.move_right()
-        if game.pressed.get(pygame.K_SPACE):
-            game.player.launch_projectile()
-    if game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0 - (game.player.rect.width) / 2:
+    if game.pressed.get(pygame.K_LEFT):
         game.player.move_left()
-        if game.pressed.get(pygame.K_SPACE):
-            game.player.launch_projectile()
-
+    if (game.player.rect.x) > screen.get_width():
+        game.player.rect.x = 0 - game.player.rect.width 
+    if (game.player.rect.x) < -(game.player.rect.width) :
+        game.player.rect.x = screen.get_width()
 
     #mettre à jour l'écran  #
     pygame.display.flip()

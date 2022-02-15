@@ -1,7 +1,13 @@
 import pygame
+from pygame import mixer
  
 surfaceW = 400 #Dimension de la fenêtre / Largeur
 surfaceH = 600 #Dimension de la fenêtre / Longueur
+
+#Musique de fond
+mixer.init()
+mixer.music.load('sounds/01_Title Screen.mp3')
+mixer.music.play()
 
 #classe menu#
 class Menu :
