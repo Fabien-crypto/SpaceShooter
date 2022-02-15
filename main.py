@@ -5,7 +5,7 @@ from game import Game
 pygame.init()
 
 #Icone jeu#
-a = pygame.image.load('assets/vaisseaux/nomove.png')
+a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 pygame.display.set_icon(a)
 
 #Musique de fond

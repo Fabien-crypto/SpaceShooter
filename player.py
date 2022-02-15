@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.attack = 10
         self.velocity = 4
         self.all_projectiles = pygame.sprite.Group()
-        self.image = pygame.image.load('assets/vaisseaux/nomove.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
         self.rect = self.image.get_rect()
         self.rect.x = 129
@@ -35,20 +35,20 @@ class Player(pygame.sprite.Sprite):
 
     def move_right(self):
         self.rect.x += self.velocity
-        self.image = pygame.image.load('assets/vaisseaux/right.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/right.png')
         self.image = pygame.transform.scale(self.image, (80, 80))
     def move_left(self):
         self.rect.x -= self.velocity
-        self.image = pygame.image.load('assets/vaisseaux/left.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/left.png')
         self.image = pygame.transform.scale(self.image, (80,80))
     def move_up(self):
         self.rect.y -= self.velocity
-        self.image = pygame.image.load('assets/vaisseaux/nomove.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
     def move_down(self):
         self.rect.y += self.velocity
-        self.image = pygame.image.load('assets/vaisseaux/nomove.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
     def no_move(self):
-        self.image = pygame.image.load('assets/vaisseaux/nomove.png')
+        self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
