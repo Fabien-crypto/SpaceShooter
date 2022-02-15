@@ -2,7 +2,8 @@ import pygame
  
 surfaceW = 400 #Dimension de la fenêtre / Largeur
 surfaceH = 600 #Dimension de la fenêtre / Longueur
- 
+
+#classe menu#
 class Menu :
     """ Création et gestion des boutons d'un menu """
     def __init__(self, application, *groupes) :
