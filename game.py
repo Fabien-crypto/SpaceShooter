@@ -10,6 +10,4 @@ class Game:
         self.pressed = {}
         
 
-#test
-#test21
-#test22
+#test20
