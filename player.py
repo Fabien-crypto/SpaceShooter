@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
         self.rect = self.image.get_rect()
-        self.rect.x = 129
+        self.rect.x = 160
         self.rect.y = 500
         self.shoot_delay = 150
         self.last_shoot =  pygame.time.get_ticks()
