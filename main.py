@@ -3,7 +3,6 @@ import pygame
 import os
 from game import Game
 pygame.init()
-
 cdir = format(os.getcwd())
 #Temps du jeu #
 clock = pygame.time.Clock()
@@ -17,6 +16,7 @@ y_background = 0
 
 #Chargement de notre jeu#
 game = Game()
+
 # Boucle jeu #
 running = True
 pygame.key.set_repeat
