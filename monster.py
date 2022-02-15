@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from laser_ennemie import Laser_ennemie
 
+#Classe du monstre#
 class Monster(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
