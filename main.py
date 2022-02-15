@@ -40,6 +40,7 @@ while running :
         projectile.move()
     for monster in game.monster.all_monsters :
         monster.forward()
+    game.player.update_health_bar(screen)
     game.monster.spawn_monster()
 
     #Appliquer l'ensemble de mon grp de projectiles en les dessinant#

@@ -5,8 +5,8 @@ from laser_ennemie import Laser_ennemie
 class Monster(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.health = 10
-        self.max_health = 10
+        self.health = 50
+        self.max_health = 50
         self.attack = 5
         self.all_monsters = pygame.sprite.Group()
         self.all_laser = pygame.sprite.Group()

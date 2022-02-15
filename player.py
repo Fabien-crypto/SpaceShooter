@@ -4,8 +4,8 @@ from projectile import Projectile
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.health = 3
-        self.max_health = 3
+        self.health = 100
+        self.max_health = 100
         self.attack = 10
         self.velocity = 4
         self.all_projectiles = pygame.sprite.Group()
@@ -16,6 +16,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = 500
         self.shoot_delay = 150
         self.last_shoot =  pygame.time.get_ticks()
+
+    def update_health_bar(self,surface):
+        bar_color = (35, 188, 27)
+        bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.health, 5]
+        back_bar_color = (212, 63, 23)
+        back_bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.health, 5]
+        pygame.draw.rect(surface, back_bar_color, back_bar_position)
+        pygame.draw.rect(surface, bar_color, bar_position)
+
         
     def launch_projectile(self):
         #Création nouvelle instance du projectile#
