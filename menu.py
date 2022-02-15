@@ -11,7 +11,7 @@ pygame.display.set_icon(a)
 #Musique de fond
 mixer.init()
 mixer.music.load('sounds/01_Title Screen.mp3')
-mixer.music.set_volume(0.3)
+mixer.music.set_volume(0.05)
 mixer.music.play()
 
 pygame.init()
