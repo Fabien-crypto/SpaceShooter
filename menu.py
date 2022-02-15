@@ -89,7 +89,7 @@ class MenuBouton(pygame.sprite.Sprite) :
         self._commande()
  
  
-class Jeu :
+class Jeu:
     """ Simulacre de l'interface du jeu """
     def __init__(self, jeu, *groupes) :
         from itertools import cycle
