@@ -1,4 +1,0 @@
-best_score = 0
-last_score = 0
-background_sound = 1
-effects_sound = 1
