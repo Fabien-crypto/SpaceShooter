@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
 
         
     def launch_projectile(self):
-        #Création nouvelle instance du projectile#
+        #Création nouvelle instance du projectile et intervalle de temps#
         now = pygame.time.get_ticks()
         if now - self.last_shoot > self.shoot_delay:
             self.all_projectiles.add(Projectile(self))
