@@ -6,10 +6,10 @@ pygame.init()
 SCREEN = pygame.display.set_mode((400, 600))
 pygame.display.set_caption("SpaceShoot")
 
-BG = pygame.image.load("C:/Users/DataWorm/Desktop/Menu-System-PyGame-main/assets/Background.png")
+BG = pygame.image.load("assets/menu/Background.png")
 
 def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("C:/Users/DataWorm/Desktop/Menu-System-PyGame-main/assets/font.ttf", size)
+    return pygame.font.Font("assets/menu/font.ttf", size)
 
 def play():
     while True:
@@ -72,11 +72,11 @@ def main_menu():
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("C:/Users/DataWorm/Desktop/Menu-System-PyGame-main/assets/Play Rect.png"), pos=(200, 200), 
+        PLAY_BUTTON = Button(image=pygame.image.load("assets/menu/Play Rect.png"), pos=(200, 200), 
                             text_input="PLAY", font=get_font(12), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("C:/Users/DataWorm/Desktop/Menu-System-PyGame-main/assets/Options Rect.png"), pos=(200, 350), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/menu/Options Rect.png"), pos=(200, 350), 
                             text_input="OPTIONS", font=get_font(12), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("C:/Users/DataWorm/Desktop/Menu-System-PyGame-main/assets/Quit Rect.png"), pos=(200, 500), 
+        QUIT_BUTTON = Button(image=pygame.image.load("assets/menu/Quit Rect.png"), pos=(200, 500), 
                             text_input="QUIT", font=get_font(12), base_color="#d7fcd4", hovering_color="White")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
