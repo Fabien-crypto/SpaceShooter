@@ -6,6 +6,8 @@ from pygame import mixer
 
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+image1 = pygame.image.load("assets/menu/Play Rect.png")
+image1 = pygame.transform.scale(image1,(150,50))
 pygame.display.set_icon(a)
 
 #Musique de fond
@@ -40,16 +42,12 @@ def play():
 def options():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
-
         SCREEN.fill("black")
-
         OPTIONS_TEXT = get_font(12).render("Choisir tes paramètres.", True, "white")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(200, 260))
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
-
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
-
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
 
@@ -71,12 +69,11 @@ def main_menu():
 
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
-
-        PLAY_BUTTON = Button(image=pygame.image.load("assets/menu/Play Rect.png"), pos=(200, 200), 
+        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
                             text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/menu/Options Rect.png"), pos=(200, 280), 
+        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), 
                             text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/menu/Quit Rect.png"), pos=(200, 360), 
+        QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
 
         SCREEN.blit(MENU_TEXT, MENU_RECT)
