@@ -10,18 +10,24 @@ image1 = pygame.image.load("assets/menu/Play Rect.png")
 image1 = pygame.transform.scale(image1,(150,50))
 pygame.display.set_icon(a)
 
+
 #Musique de fond
 mixer.init()
 mixer.music.load('sounds/01_Title Screen.mp3')
-mixer.music.set_volume(0.05)
+volume = 0.5
+mixer.music.set_volume(volume)
 mixer.music.play()
 
+#définition de notre menu #
 pygame.init()
-
 SCREEN = pygame.display.set_mode((400, 600))
 pygame.display.set_caption("SpaceShoot")
 
 BG = pygame.image.load("assets/menu/Background.png")
+
+# Définition des icons dans le menu#
+best_score = pygame.image.load('assets/icon/best_score.png')
+best_score = pygame.transform.scale(best_score,(40,40))
 
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
@@ -76,7 +82,15 @@ def main_menu():
         QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
 
+        Best_Score_TEXT = get_font(12).render("Meilleur Score: 1290", True, "white")
+        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(200, 425))
+        Prec_Score_TEXT = get_font(12).render("Score Précédent: 798", True, "white")
+        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(200, 475))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
+        SCREEN.blit(Best_Score_TEXT, Best_Score_RECT)
+        SCREEN.blit(Prec_Score_TEXT, Prec_Score_RECT)
+        SCREEN.blit(best_score,(25,400))
+
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
