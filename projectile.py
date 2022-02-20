@@ -14,11 +14,14 @@ class Projectile(pygame.sprite.Sprite) :
         self.rect = self.image.get_rect()
         self.rect.x = player.rect.x + (player.rect.width)/2 - self.image.get_width()/2
         self.rect.y = player.rect.y
+
     def remove(self):
         self.player.all_projectiles.remove(self)
+
     def move(self):
         self.rect.y -= self.velocity
         from main import screen
         if self.rect.y < -10:
             self.remove()
+
 

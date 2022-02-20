@@ -2,11 +2,12 @@ import pygame
 from projectile import Projectile
 #Classe joueur #
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, game):
         super().__init__()
+        self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 10
+        self.attack = 15
         self.velocity = 4
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -17,15 +18,21 @@ class Player(pygame.sprite.Sprite):
         self.shoot_delay = 150
         self.last_shoot =  pygame.time.get_ticks()
 
+    def damage(self, amount) :
+        if self.health == 50 :
+            print("hello")
+            self.remove()
+        else :
+            self.health -= amount
+
     def update_health_bar(self,surface):
         bar_color = (35, 188, 27)
         bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.health, 5]
         back_bar_color = (212, 63, 23)
-        back_bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.health, 5]
-        pygame.draw.rect(surface, back_bar_color, back_bar_position) #dessin barre de vie verte #
-        pygame.draw.rect(surface, bar_color, bar_position) #dessin barre de vie rouge#
+        back_bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.max_health, 5]
+        pygame.draw.rect(surface, back_bar_color, back_bar_position) #dessin barre de vie rouge #
+        pygame.draw.rect(surface, bar_color, bar_position) #dessin barre de vie verte#
 
-        
     def launch_projectile(self):
         #Création nouvelle instance du projectile et intervalle de temps#
         now = pygame.time.get_ticks()

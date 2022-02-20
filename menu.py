@@ -27,7 +27,10 @@ BG = pygame.image.load("assets/menu/Background.png")
 
 # Définition des icons dans le menu#
 best_score = pygame.image.load('assets/icon/best_score.png')
-best_score = pygame.transform.scale(best_score,(40,40))
+best_score = pygame.transform.scale(best_score,(20,20))
+
+prec_score = pygame.image.load('assets/icon/prec_score.png')
+prec_score = pygame.transform.scale(prec_score,(20,20))
 
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
@@ -83,13 +86,14 @@ def main_menu():
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
 
         Best_Score_TEXT = get_font(12).render("Meilleur Score: 1290", True, "white")
-        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(200, 425))
+        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
         Prec_Score_TEXT = get_font(12).render("Score Précédent: 798", True, "white")
-        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(200, 475))
+        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
         SCREEN.blit(Best_Score_TEXT, Best_Score_RECT)
         SCREEN.blit(Prec_Score_TEXT, Prec_Score_RECT)
-        SCREEN.blit(best_score,(25,400))
+        SCREEN.blit(best_score,(55,438))
+        SCREEN.blit(prec_score,(55,488))
 
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:

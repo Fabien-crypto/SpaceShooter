@@ -26,6 +26,17 @@ y_background = 0
 #Chargement de notre jeu#
 game = Game()
 
+def detect_collision():
+    for monster in game.monster.all_monsters :
+        touch = pygame.sprite.spritecollide(monster, game.player.all_projectiles,True)
+        if touch:
+            game.monster.damage(game.player.attack)
+            game.player.all_projectiles.remove()
+
+    contact = pygame.sprite.spritecollide(game.player, game.monster.all_monsters, True)
+    if contact:
+        game.player.damage(game.monster.attack)
+
 # Boucle jeu #
 running = True
 pygame.key.set_repeat
@@ -43,7 +54,8 @@ while running :
     clock.tick(100)
 
     # spawn des monstres par intervalle de temps #
-
+    #collision entre missiles, joueur et monstres#
+    detect_collision()
     #récupérer tout les projectiles du joueur #
     for projectile in game.player.all_projectiles :
         projectile.move()
@@ -52,9 +64,11 @@ while running :
     game.player.update_health_bar(screen)
     game.monster.spawn_monster()
 
+    
     #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
     game.player.all_projectiles.draw(screen)
     game.monster.all_monsters.draw(screen)
+
     # vérifier si le joueur souhaite bouger ou tirer#
     if game.pressed.get(pygame.K_SPACE):
         game.player.launch_projectile()
