@@ -36,7 +36,7 @@ def pause():
     paused = True
 
     while paused:
-        from menu import SCREEN,Button,image1,BG,best_score,prec_score, options
+        from menu import SCREEN,Button,image1,BG,best_score,prec_score, options,main_menu
 
         SCREEN.blit(BG, (0, 0))
 
@@ -44,12 +44,12 @@ def pause():
 
         MENU_TEXT = get_font(23).render("Pause", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
-        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
-                            text_input="RECOMMENCER", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), 
+        REPRENDRE = Button(image=image1, pos=(200, 200), 
+                            text_input="REPRENDRE", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS = Button(image=image1, pos=(200, 280), 
                             text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
-                            text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
+        MENU = Button(image=image1, pos=(200, 360), 
+                            text_input="MENU", font=get_font(12), base_color="White", hovering_color="Green")
 
         Best_Score_TEXT = get_font(12).render("Meilleur Score: 1290", True, "white")
         Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
@@ -61,7 +61,8 @@ def pause():
         SCREEN.blit(best_score,(55,438))
         SCREEN.blit(prec_score,(55,488))
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [REPRENDRE, OPTIONS, MENU]:
+            button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
         for event in pygame.event.get():
@@ -69,13 +70,13 @@ def pause():
                 pygame.quit()
                 quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    game()
-                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                if REPRENDRE.checkForInput(MENU_MOUSE_POS):
+                    paused = False
+                    break
+                if OPTIONS.checkForInput(MENU_MOUSE_POS):
                     options()
-                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    pygame.quit()
-                    sys.exit()
+                if MENU.checkForInput(MENU_MOUSE_POS):
+                    main_menu
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     paused = False
