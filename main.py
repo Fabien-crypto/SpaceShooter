@@ -62,7 +62,6 @@ def pause():
         SCREEN.blit(prec_score,(55,488))
 
         for button in [REPRENDRE, OPTIONS, MENU]:
-            button.changeColor(MENU_MOUSE_POS)
             button.update(SCREEN)
         
         for event in pygame.event.get():
@@ -72,7 +71,6 @@ def pause():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if REPRENDRE.checkForInput(MENU_MOUSE_POS):
                     paused = False
-                    break
                 if OPTIONS.checkForInput(MENU_MOUSE_POS):
                     options()
                 if MENU.checkForInput(MENU_MOUSE_POS):
