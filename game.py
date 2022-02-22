@@ -9,5 +9,3 @@ class Game:
         self.monster  = Monster(self)
         self.pressed = {}
 
-    def collision(self, sprite, group) :
-        return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)

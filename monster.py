@@ -23,6 +23,19 @@ class Monster(pygame.sprite.Sprite):
         self.last_monster = pygame.time.get_ticks()
 
 
+    def damage(self, amount) :
+        if self.health <= 0 :
+            print("mort")
+        else :
+            self.health -= amount
+
+    def update_health_bar(self,surface):
+        bar_color = (35, 188, 27)
+        bar_position = [self.rect.x+10, self.rect.y + self.rect.height, self.health, 5]
+        back_bar_color = (212, 63, 23)
+        back_bar_position = [self.rect.x+10, self.rect.y + self.rect.height, self.max_health, 5]
+        pygame.draw.rect(surface, back_bar_color, back_bar_position) #dessin barre de vie rouge #
+        pygame.draw.rect(surface, bar_color, bar_position) #dessin barre de vie verte#
 
     def spawn_monster(self):
         now = pygame.time.get_ticks()
@@ -34,9 +47,6 @@ class Monster(pygame.sprite.Sprite):
     def remove(self):
         #on enlève les ennemies de la map#
         self.all_monsters.remove(self)
-
-    def damage(self, amount) :
-        self.health -= amount
         
 
     def forward(self):

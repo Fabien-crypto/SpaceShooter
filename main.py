@@ -26,16 +26,6 @@ y_background = 0
 #Chargement de notre jeu#
 game = Game()
 
-def detect_collision():
-    for monster in game.monster.all_monsters :
-        touch = pygame.sprite.spritecollide(monster, game.player.all_projectiles,True)
-        if touch:
-            game.monster.damage(game.player.attack)
-            game.player.all_projectiles.remove()
-
-    contact = pygame.sprite.spritecollide(game.player, game.monster.all_monsters, True)
-    if contact:
-        game.player.damage(game.monster.attack)
 
 # Boucle jeu #
 running = True
@@ -53,14 +43,21 @@ while running :
     screen.blit(game.player.image, game.player.rect)
     clock.tick(100)
 
-    # spawn des monstres par intervalle de temps #
-    #collision entre missiles, joueur et monstres#
-    detect_collision()
     #récupérer tout les projectiles du joueur #
     for projectile in game.player.all_projectiles :
         projectile.move()
+
     for monster in game.monster.all_monsters :
         monster.forward()
+        monster.update_health_bar(screen)
+        touch = pygame.sprite.spritecollide(monster, game.player.all_projectiles,True)
+        if touch:
+            game.monster.damage(game.player.attack)
+        game.player.all_projectiles.remove()
+
+        contact = pygame.sprite.spritecollide(game.player, monster.all_monsters, True)
+        if contact:
+            game.player.damage(game.monster.attack)
     game.player.update_health_bar(screen)
     game.monster.spawn_monster()
 
@@ -72,9 +69,9 @@ while running :
     # vérifier si le joueur souhaite bouger ou tirer#
     if game.pressed.get(pygame.K_SPACE):
         game.player.launch_projectile()
-    if game.pressed.get(pygame.K_DOWN) or game.pressed.get(pygame.K_s) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
+    if (game.pressed.get(pygame.K_DOWN) or game.pressed.get(pygame.K_s) ) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
         game.player.move_down()
-    if game.pressed.get(pygame.K_UP) or game.pressed.get(pygame.K_z) and game.player.rect.y > 0:
+    if (game.pressed.get(pygame.K_UP) or game.pressed.get(pygame.K_z)) and game.player.rect.y > 0:
         game.player.move_up()
     if game.pressed.get(pygame.K_RIGHT) or game.pressed.get(pygame.K_d):
         game.player.move_right()
@@ -92,7 +89,6 @@ while running :
         if event.type == pygame.QUIT :
             running = False
             pygame.quit()
-            print("fermeture du jeu")
         if event.type == pygame.KEYDOWN :
             game.pressed[event.key]=True
         elif event.type == pygame.KEYUP :
