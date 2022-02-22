@@ -10,7 +10,7 @@ class Monster(pygame.sprite.Sprite):
         self.game = game
         self.health = 50
         self.max_health = 50
-        self.attack = 50
+        self.attack = 30
         self.all_monsters = pygame.sprite.Group()
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/ennemies/enemy-01/nomove.png')
@@ -37,7 +37,7 @@ class Monster(pygame.sprite.Sprite):
 
     def damage(self, amount) :
         self.health -= amount
-        print("hello2")
+        
 
     def forward(self):
         self.rect.y += self.velocity
