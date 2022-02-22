@@ -48,7 +48,7 @@ def pause():
                     paused = False
                 
                 if event.key == pygame.K_r:
-                    game1()
+                    game()
 
                 elif event.key == pygame.K_q:
                     pygame.quit()
@@ -58,7 +58,7 @@ def pause():
 
 
 
-def game1():
+def game():
     #Chargement de notre jeu#
     game = Game()
     background = pygame.image.load('assets/fond/frameBackground.png')
