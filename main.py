@@ -72,13 +72,13 @@ while running :
     # vérifier si le joueur souhaite bouger ou tirer#
     if game.pressed.get(pygame.K_SPACE):
         game.player.launch_projectile()
-    if game.pressed.get(pygame.K_DOWN) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
+    if game.pressed.get(pygame.K_DOWN) or game.pressed.get(pygame.K_s) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
         game.player.move_down()
-    if game.pressed.get(pygame.K_UP) and game.player.rect.y > 0:
+    if game.pressed.get(pygame.K_UP) or game.pressed.get(pygame.K_z) and game.player.rect.y > 0:
         game.player.move_up()
-    if game.pressed.get(pygame.K_RIGHT):
+    if game.pressed.get(pygame.K_RIGHT) or game.pressed.get(pygame.K_d):
         game.player.move_right()
-    if game.pressed.get(pygame.K_LEFT):
+    if game.pressed.get(pygame.K_LEFT) or game.pressed.get(pygame.K_q):
         game.player.move_left()
     if (game.player.rect.x) > screen.get_width():
         game.player.rect.x = 0 - game.player.rect.width 
