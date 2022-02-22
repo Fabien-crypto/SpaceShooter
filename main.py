@@ -1,4 +1,5 @@
 import time
+import sys
 from pip import main 
 import pygame
 from pygame import mixer
@@ -35,24 +36,50 @@ def pause():
     paused = True
 
     while paused:
-        Pause_TEXT = get_font(20).render("Pause", True, "white")
-        Pause_TEXT2 = get_font(10).render("R to restart / Q to quit", True, "white")
-        screen.blit(Pause_TEXT,(150,300))
-        screen.blit(Pause_TEXT2,(85,250))
+        from menu import SCREEN,Button,image1,BG,best_score,prec_score, options
+
+        SCREEN.blit(BG, (0, 0))
+
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+
+        MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
+        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
+                            text_input="RECOMMENCER", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), 
+                            text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
+                            text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
+
+        Best_Score_TEXT = get_font(12).render("Meilleur Score: 1290", True, "white")
+        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
+        Prec_Score_TEXT = get_font(12).render("Score Précédent: 798", True, "white")
+        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
+        SCREEN.blit(MENU_TEXT, MENU_RECT)
+        SCREEN.blit(Best_Score_TEXT, Best_Score_RECT)
+        SCREEN.blit(Prec_Score_TEXT, Prec_Score_RECT)
+        SCREEN.blit(best_score,(55,438))
+        SCREEN.blit(prec_score,(55,488))
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.update(SCREEN)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    game()
+                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    options()
+                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    pygame.quit()
+                    sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     paused = False
-                
-                if event.key == pygame.K_r:
-                    game()
 
-                elif event.key == pygame.K_q:
-                    pygame.quit()
-                    quit()
         clock.tick(5)
         pygame.display.update()
 
