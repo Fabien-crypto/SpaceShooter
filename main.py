@@ -42,7 +42,7 @@ def pause():
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-        MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
+        MENU_TEXT = get_font(23).render("Pause", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
         PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
                             text_input="RECOMMENCER", font=get_font(12), base_color="White", hovering_color="Green")
