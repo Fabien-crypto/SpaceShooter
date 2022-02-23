@@ -8,8 +8,8 @@ class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.health = 50
-        self.max_health = 50
+        self.health = 30
+        self.max_health = 30
         self.attack = 30
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/ennemies/enemy-01/nomove.png')
@@ -23,6 +23,7 @@ class Monster(pygame.sprite.Sprite):
         self.health -= amount
         if self.health <= 0:
             self.game.all_monsters.remove(self)
+            self.game.player.score += 5
 
     def forward(self):
         self.rect.y += self.velocity

@@ -8,15 +8,17 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.attack = 15
-        self.velocity = 4
+        self.velocity = 5
+        self.score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
         self.rect = self.image.get_rect()
         self.rect.x = 160
         self.rect.y = 500
-        self.shoot_delay = 150
+        self.shoot_delay = 120
         self.last_shoot =  pygame.time.get_ticks()
+
 
     def damage(self, amount) :
         if self.health <= 0 :

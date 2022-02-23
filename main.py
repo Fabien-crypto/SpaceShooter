@@ -20,11 +20,25 @@ clock = pygame.time.Clock()
 # Générer une fenêtre de jeu #
 pygame.display.set_caption("SpaceShoot")
 screen = pygame.display.set_mode((400, 600))
+
 #background# 
 background = pygame.image.load('assets/fond/frameBackground.png')
 background = pygame.transform.scale(background,(400,600))
 y_background = 0
 
+#Définition de la police d'écriture #
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("assets/menu/font.ttf", size)
+
+def paused() :
+    while pause:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN :
+                if event.key==pygame.K_ESCAPE:
+                    return 0
+    pygame.display.update()
 #Chargement de notre jeu#
 game = Game()
 
@@ -47,6 +61,11 @@ while running :
     game.player.all_projectiles.draw(screen)
     game.all_monsters.draw(screen)
 
+    #Affichage du score #
+    Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
+    Score_RECT = Score_TEXT.get_rect(center=(80, 20))
+    screen.blit(Score_TEXT, Score_RECT)
+
     #récupérer tout les projectiles du joueur #
     for projectile in game.player.all_projectiles :
         projectile.move()
@@ -56,7 +75,6 @@ while running :
     
     game.player.update_health_bar(screen)
     game.spawn_monster()
-    
     # vérifier si le joueur souhaite bouger ou tirer#
     if game.pressed.get(pygame.K_SPACE):
         game.player.launch_projectile()
@@ -73,7 +91,6 @@ while running :
         (game.pressed.get(pygame.K_RIGHT) or game.pressed.get(pygame.K_d)) or  
         (game.pressed.get(pygame.K_LEFT) or game.pressed.get(pygame.K_q)) ):
         game.player.no_move()
-
     if (game.player.rect.x) > screen.get_width():
         game.player.rect.x = 0 - game.player.rect.width 
     if (game.player.rect.x) < -(game.player.rect.width) :
@@ -88,5 +105,8 @@ while running :
             pygame.quit()
         if event.type == pygame.KEYDOWN :
             game.pressed[event.key]=True
+            if event.key==pygame.K_ESCAPE:
+                pause = True
+                paused()
         elif event.type == pygame.KEYUP :
             game.pressed[event.key] = False
