@@ -34,7 +34,12 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def paused() :
     while pause:
-        pygame.draw.rect(screen, (255,255,255), pygame.Rect(60,50, 280, 500)) 
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+        from menu import image1
+        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
+                            text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
+        PLAY_BUTTON.changeColor(OPTIONS_MOUSE_POS)
+        PLAY_BUTTON.update(screen)
         pygame.display.update() 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -42,6 +47,10 @@ def paused() :
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
                     return 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    return 0
+
 
 #Chargement de notre jeu#
 game = Game()
