@@ -2,6 +2,7 @@ import pygame
 import sys
 from button import Button
 from pygame import mixer
+from game import Game
  
 
 #Icone jeu#
@@ -18,6 +19,7 @@ volume = 0.5
 mixer.music.set_volume(volume)
 mixer.music.play()
 
+game = Game()
 #définition de notre menu #
 pygame.init()
 SCREEN = pygame.display.set_mode((400, 600))
@@ -28,7 +30,6 @@ BG = pygame.image.load("assets/menu/Background.png")
 # Définition des icons dans le menu#
 best_score = pygame.image.load('assets/icon/best_score.png')
 best_score = pygame.transform.scale(best_score,(20,20))
-
 prec_score = pygame.image.load('assets/icon/prec_score.png')
 prec_score = pygame.transform.scale(prec_score,(20,20))
 
@@ -37,7 +38,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def play():
     while True:
-        from main import game
+        import main
         game()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -48,7 +49,6 @@ def play():
                     main_menu()
 
         pygame.display.update()
-    
 def options():
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
@@ -86,9 +86,9 @@ def main_menu():
         QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
 
-        Best_Score_TEXT = get_font(12).render("Meilleur Score: 1290", True, "white")
+        Best_Score_TEXT = get_font(12).render("Meilleur Score: 1289 ", True, "white")
         Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
-        Prec_Score_TEXT = get_font(12).render("Score Précédent: 798", True, "white")
+        Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+str(game.player.score)), True, "white")
         Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
         SCREEN.blit(Best_Score_TEXT, Best_Score_RECT)

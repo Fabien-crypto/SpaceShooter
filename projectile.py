@@ -4,7 +4,7 @@ class Projectile(pygame.sprite.Sprite) :
     # Définir le constructeur de cette classe #
     def __init__(self, player):
         super().__init__()
-        soundObj = pygame.mixer.Sound('sounds/tirs.wav')
+        soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
         soundObj.set_volume(1.0)
         soundObj.play()
         self.velocity = 5

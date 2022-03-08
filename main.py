@@ -2,13 +2,15 @@ import time
 import pygame
 from pygame import mixer
 from game import Game
+from button import Button
+import sys
 pygame.init()
 
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 pygame.display.set_icon(a)
 
-#Musique de fond
+#Musique de fond#
 mixer.init()
 mixer.music.load('sounds/10 Drummed vaus.mp3')
 mixer.music.play()
@@ -32,13 +34,15 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def paused() :
     while pause:
+        pygame.draw.rect(screen, (255,255,255), pygame.Rect(60,50, 280, 500)) 
+        pygame.display.update() 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
                     return 0
-    pygame.display.update()
+
 #Chargement de notre jeu#
 game = Game()
 
@@ -60,10 +64,12 @@ while running :
     #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
     game.player.all_projectiles.draw(screen)
     game.all_monsters.draw(screen)
+    game.all_explosion.draw(screen)
+
 
     #Affichage du score #
     Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
-    Score_RECT = Score_TEXT.get_rect(center=(80, 20))
+    Score_RECT = Score_TEXT.get_rect(center=(100, 20))
     screen.blit(Score_TEXT, Score_RECT)
 
     #récupérer tout les projectiles du joueur #

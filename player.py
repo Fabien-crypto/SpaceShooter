@@ -19,7 +19,6 @@ class Player(pygame.sprite.Sprite):
         self.shoot_delay = 120
         self.last_shoot =  pygame.time.get_ticks()
 
-
     def damage(self, amount) :
         if self.health <= 0 :
             self.remove()
