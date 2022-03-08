@@ -14,8 +14,8 @@ pygame.display.set_icon(a)
 mixer.init()
 mixer.music.load('sounds/10 Drummed vaus.mp3')
 mixer.music.play()
-volume = 0.5
-mixer.music.set_volume(volume)
+volumejeux = 0.5
+mixer.music.set_volume(volumejeux)
 
 #Temps du jeu #
 clock = pygame.time.Clock()

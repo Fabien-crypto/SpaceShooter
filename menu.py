@@ -3,7 +3,6 @@ import sys
 from button import Button
 from pygame import mixer
 from game import Game
- 
 
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -36,6 +35,19 @@ prec_score = pygame.transform.scale(prec_score,(20,20))
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
+
+def volumeplus(volume):
+    if volume==0.5:
+        pass
+    if volume==0.5*0.75:
+        volume=0.5
+    if volume==0.5*0.5:
+        volume==0.5*0.75
+    if volume==0.5*0.25:
+        volume=0.5*0.5
+    mixer.music.set_volume(volume)
+    print(volume)
+
 def play():
     while True:
         import main
@@ -50,6 +62,7 @@ def play():
 
         pygame.display.update()
 def options():
+    global volume
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         SCREEN.fill("black")
@@ -60,6 +73,14 @@ def options():
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
+        OPTIONS_PLUS = Button(image=None, pos=(200, 400),
+                            text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_PLUS.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_PLUS.update(SCREEN)
+        OPTIONS_MOINS = Button(image=None, pos=(200, 300),
+                            text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_MOINS.changeColor(OPTIONS_MOUSE_POS)
+        OPTIONS_MOINS.update(SCREEN)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -68,6 +89,28 @@ def options():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
+                if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume==0.5:
+                        pass
+                    elif volume==0.5*0.75:
+                        volume=0.5
+                    elif volume==0.5*0.5:
+                        volume=0.5*0.75
+                    elif volume==0.5*0.25:
+                        volume=0.5*0.5
+                    elif volume==0:
+                        volume=0.5*0.25
+                    mixer.music.set_volume(volume)
+                if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume==0.5:
+                        volume=0.375
+                    elif volume==0.375:
+                        volume=0.25
+                    elif volume==0.5*0.5:
+                        volume=0.5*0.25
+                    elif volume==0.5*0.25:
+                        volume=0
+                    mixer.music.set_volume(volume)
 
         pygame.display.update()
 
