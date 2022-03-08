@@ -12,7 +12,7 @@ class Monster(pygame.sprite.Sprite):
         self.explosion.set_volume(0.5)
         self.health = 30
         self.max_health = 30
-        self.attack = 30
+        self.attack = 10
         self.velocity = 1
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/ennemies/enemy-01/nomove.png')
@@ -30,6 +30,9 @@ class Monster(pygame.sprite.Sprite):
 
     def forward(self):
         self.rect.y += self.velocity
+        if self.game.check_collision(self,self.game.all_players) :
+            self.game.player.damage(self.attack)
+            self.game.all_monsters.remove(self)
 
     def launch_laser(self) :
         self.all_laser.add(Laser_ennemie(self))

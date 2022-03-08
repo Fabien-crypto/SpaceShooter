@@ -16,12 +16,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 160
         self.rect.y = 500
-        self.shoot_delay = 120
+        self.shoot_delay = 180
         self.last_shoot =  pygame.time.get_ticks()
 
     def damage(self, amount) :
-        if self.health <= 0 :
-            self.remove()
+        if self.health < 50 :
+            self.game.all_players.remove(self)
         else :
             self.health -= amount
 
