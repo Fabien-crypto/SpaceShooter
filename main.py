@@ -8,6 +8,8 @@ pygame.init()
 
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+image1 = pygame.image.load("assets/menu/Play Rect.png")
+image1 = pygame.transform.scale(image1,(150,50))
 pygame.display.set_icon(a)
 
 #Musique de fond#
@@ -34,10 +36,9 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def paused() :
     while pause:
+        mixer.music.pause()
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
-        from menu import image1
-        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
-                            text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
+        PLAY_BUTTON = Button(image=image1, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         PLAY_BUTTON.changeColor(OPTIONS_MOUSE_POS)
         PLAY_BUTTON.update(screen)
         pygame.display.update() 
@@ -46,9 +47,11 @@ def paused() :
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
+                    mixer.music.unpause()
                     return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    mixer.music.unpause() 
                     return 0
 
 
@@ -69,12 +72,14 @@ while running :
         screen.blit(background, (0, y_background))
     #Appliquer image de notre joueur#
     screen.blit(game.player.image, game.player.rect)
-    clock.tick(100)
+    clock.tick(60)
     
     #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
+    game.explosion_group.update()
+
     game.player.all_projectiles.draw(screen)
     game.all_monsters.draw(screen)
-    game.all_explosion.draw(screen)
+    game.explosion_group.draw(screen)
 
 
     #Affichage du score #
@@ -91,6 +96,7 @@ while running :
     
     game.player.update_health_bar(screen)
     game.spawn_monster()
+
     # vérifier si le joueur souhaite bouger ou tirer#
     if game.pressed.get(pygame.K_SPACE):
         game.player.launch_projectile()

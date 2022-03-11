@@ -7,7 +7,7 @@ class Projectile(pygame.sprite.Sprite) :
         soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
         soundObj.set_volume(1.0)
         soundObj.play()
-        self.velocity = 5
+        self.velocity = 9
         self.player = player
         self.image = pygame.image.load('assets/missiles/PlayProjectile.png')
         self.image = pygame.transform.scale(self.image, (20,20))

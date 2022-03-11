@@ -9,12 +9,12 @@ class Game:
         self.all_players = pygame.sprite.Group()
         self.player = Player(self)
         self.all_players.add(self.player)
+        self.explosion_group = pygame.sprite.Group()
         self.all_monsters = pygame.sprite.Group()
         self.monster  = Monster(self)
         self.pressed = {}
         self.delay_spawn = 900
         self.last_monster = pygame.time.get_ticks()
-        self.all_explosion = pygame.sprite.Group()
 
     def check_collision(self, sprite, group) :
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
