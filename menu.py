@@ -66,26 +66,25 @@ def options():
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
         SCREEN.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         SCREEN.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
+        
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_BACK.update(SCREEN)
         OPTIONS_PLUS = Button(image=None, pos=(380, 185),
                             text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_PLUS.update(SCREEN)
         OPTIONS_MOINS = Button(image=None, pos=(380, 235),
                             text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_MOINS.update(SCREEN)
         OPTIONS_PLUS2 = Button(image=None, pos=(380, 330),
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS2.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_PLUS2.update(SCREEN)
         OPTIONS_MOINS2 = Button(image=None, pos=(380, 380),
                         text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS2.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_MOINS2.update(SCREEN)
+
+
+        buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
+
+        for button in buttonlist:
+            button.changeColor(OPTIONS_MOUSE_POS)
+            button.update(SCREEN)
+
         pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 200, position, 10)) 
         pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 350, position2, 10)) 
 

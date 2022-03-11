@@ -39,8 +39,13 @@ def paused() :
         mixer.music.pause()
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         PLAY_BUTTON = Button(image=image1, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
-        PLAY_BUTTON.changeColor(OPTIONS_MOUSE_POS)
-        PLAY_BUTTON.update(screen)
+        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=image1, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(OPTIONS_MOUSE_POS)
+            button.update(screen)
+
         pygame.display.update() 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -53,6 +58,10 @@ def paused() :
                 if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     mixer.music.unpause() 
                     return 0
+                if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    print("test")
+                if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    print("test")
 
 
 #Chargement de notre jeu#
