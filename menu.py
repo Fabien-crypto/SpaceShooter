@@ -54,6 +54,7 @@ def options():
     global position,position2
     position=300
     position2=300
+    position3 = 300
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         SCREEN.fill("black")
@@ -70,24 +71,25 @@ def options():
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_BACK.update(SCREEN)
-        OPTIONS_PLUS = Button(image=None, pos=(380, 185),
+        OPTIONS_PLUS = Button(image=None, pos=(375, 205.5),
                             text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_PLUS.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_PLUS.update(SCREEN)
-        OPTIONS_MOINS = Button(image=None, pos=(380, 235),
+        OPTIONS_MOINS = Button(image=None, pos=(25, 207.5),
                             text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_MOINS.update(SCREEN)
-        OPTIONS_PLUS2 = Button(image=None, pos=(380, 330),
+        OPTIONS_PLUS2 = Button(image=None, pos=(375, 355,5),
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_PLUS2.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_PLUS2.update(SCREEN)
-        OPTIONS_MOINS2 = Button(image=None, pos=(380, 380),
+        OPTIONS_MOINS2 = Button(image=None, pos=(25, 357.5),
                         text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS2.changeColor(OPTIONS_MOUSE_POS)
         OPTIONS_MOINS2.update(SCREEN)
-        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 200, position, 10)) 
-        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 350, position2, 10)) 
+        pygame.draw.rect(SCREEN, (53, 53,53 ), pygame.Rect(50, 200, position3, 10)) 
+        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 200, position, 10)) 
+        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 350, position2, 10)) 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -97,14 +99,14 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
-                    if volume<0.5 and position <300: 
-                        volume += 0.05
+                    if volume<0.5  and position <300: 
+                        volume += (10/100)*volume
                         position += 30
 
                     mixer.music.set_volume(volume)
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
-                        volume -= 0.05
+                        volume -= (10/100)*volume
                         position -= 30
                     mixer.music.set_volume(volume)
 

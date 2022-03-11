@@ -20,7 +20,8 @@ class Player(pygame.sprite.Sprite):
         self.last_shoot =  pygame.time.get_ticks()
 
     def damage(self, amount) :
-        if self.health < 50 :
+        if self.health <= 0 :
+            import menu
             self.game.all_players.remove(self)
         else :
             self.health -= amount

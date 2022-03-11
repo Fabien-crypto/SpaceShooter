@@ -22,7 +22,7 @@ class Monster(pygame.sprite.Sprite):
         self.rect.x = randint(-15,360)
         self.rect.y = -10
         self.delay = 90
- 
+
     def damage(self, amount) :
         self.health -= amount
         if self.health <= 0:
