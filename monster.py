@@ -24,6 +24,25 @@ class Monster(pygame.sprite.Sprite):
         self.delay = 90
         self.counter = 0
 
+
+    def damage(self, amount) :
+        self.health -= amount
+        if self.health <= 0:
+            explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
+            self.game.explosion_group.add(explosion)
+            self.game.all_monsters.remove(self)
+            self.game.player.score += 5
+
+    def forward(self):
+        self.rect.y += self.velocity
+        if self.game.check_collision(self,self.game.all_players) :
+            self.game.player.damage(self.attack)
+            self.game.all_monsters.remove(self)
+
+    def launch_laser(self) :
+        self.all_laser.add(Laser_ennemie(self))
+
+
 class Touch_animation(pygame.sprite.Sprite):
     def __init__(self, x, y, size):
         pygame.sprite.Sprite.__init__(self)
@@ -49,23 +68,5 @@ class Touch_animation(pygame.sprite.Sprite):
         #if the animation is complete, delete explosion
         if self.index >= len(self.images) - 1 and self.counter >= animation_speed:
             self.kill()
-
-    def damage(self, amount) :
-        self.health -= amount
-        if self.health <= 0:
-            explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
-            self.game.explosion_group.add(explosion)
-            self.game.all_monsters.remove(self)
-            self.game.player.score += 5
-
-    def forward(self):
-        self.rect.y += self.velocity
-        if self.game.check_collision(self,self.game.all_players) :
-            self.game.player.damage(self.attack)
-            self.game.all_monsters.remove(self)
-
-    def launch_laser(self) :
-        self.all_laser.add(Laser_ennemie(self))
-
 
 

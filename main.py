@@ -75,7 +75,7 @@ def main():
             screen.blit(background, (0, y_background))
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-        clock.tick(6)
+        clock.tick(60)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
