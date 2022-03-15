@@ -22,34 +22,7 @@ class Monster(pygame.sprite.Sprite):
         self.rect.x = randint(-15,360)
         self.rect.y = -10
         self.delay = 90
-        self.counter = 0
-
-class Touch_animation(pygame.sprite.Sprite):
-    def __init__(self, x, y, size):
-        pygame.sprite.Sprite.__init__(self)
-        self.images = []
-        for num in range(1, 4):
-            img = pygame.image.load(f"assets/vaisseaux/ennemies/enemy-01/nomove_{num}.png")
-            img = pygame.transform.scale(img,(60,60))
-            self.images.append(img)
-        self.index = 0
-        self.image = self.images[self.index]
-        self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
-        self.counter = 0
-
-    def update(self):
-        animation_speed = 3
-        #update explosion animation
-        self.counter += 1
-        if self.counter >= animation_speed and self.index < len(self.images) - 1:
-            self.counter = 0
-            self.index += 1
-            self.image = self.images[self.index]
-        #if the animation is complete, delete explosion
-        if self.index >= len(self.images) - 1 and self.counter >= animation_speed:
-            self.kill()
-
+ 
     def damage(self, amount) :
         self.health -= amount
         if self.health <= 0:

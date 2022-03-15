@@ -5,9 +5,6 @@ from button import Button
 from pygame import mixer
 from game import Game
 
-pygame.init()
-
-
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 image1 = pygame.image.load("assets/menu/Play Rect.png")
@@ -40,8 +37,8 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def play():
     while True:
-        from main import jeu
-        jeu()
+        import main
+        game()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -53,12 +50,10 @@ def play():
 
 
 def options():
-
     global volume
     global position,position2
     position=300
     position2=300
-    position3 = 300
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         SCREEN.fill("black")
@@ -71,30 +66,9 @@ def options():
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
         SCREEN.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         SCREEN.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
-
+        
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_BACK.update(SCREEN)
-        OPTIONS_PLUS = Button(image=None, pos=(375, 205.5),
-                            text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_PLUS.update(SCREEN)
-        OPTIONS_MOINS = Button(image=None, pos=(25, 207.5),
-                            text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_MOINS.update(SCREEN)
-        OPTIONS_PLUS2 = Button(image=None, pos=(375, 355,5),
-                        text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS2.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_PLUS2.update(SCREEN)
-        OPTIONS_MOINS2 = Button(image=None, pos=(25, 357.5),
-                        text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS2.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_MOINS2.update(SCREEN)
-        pygame.draw.rect(SCREEN, (53, 53,53 ), pygame.Rect(50, 200, position3, 10)) 
-        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 200, position, 10)) 
-        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 350, position2, 10)) 
         OPTIONS_PLUS = Button(image=None, pos=(380, 185),
                             text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS = Button(image=None, pos=(380, 235),
@@ -122,14 +96,14 @@ def options():
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     main_menu()
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
-                    if volume<0.5  and position <300: 
-                        volume += (10/100)*volume
+                    if volume<0.5 and position <300: 
+                        volume += 0.05
                         position += 30
 
                     mixer.music.set_volume(volume)
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
-                        volume -= (10/100)*volume
+                        volume -= 0.05
                         position -= 30
                     mixer.music.set_volume(volume)
 

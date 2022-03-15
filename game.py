@@ -10,7 +10,6 @@ class Game:
         self.player = Player(self)
         self.all_players.add(self.player)
         self.explosion_group = pygame.sprite.Group()
-        self.Touch_animation_group = pygame.sprite.Group()
         self.all_monsters = pygame.sprite.Group()
         self.monster  = Monster(self)
         self.pressed = {}
