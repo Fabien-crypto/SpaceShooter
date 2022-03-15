@@ -37,8 +37,8 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def play():
     while True:
-        import main
-        game()
+        from main import main
+        main()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
