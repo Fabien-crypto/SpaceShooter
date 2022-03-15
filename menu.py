@@ -5,6 +5,9 @@ from button import Button
 from pygame import mixer
 from game import Game
 
+pygame.init()
+
+
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 image1 = pygame.image.load("assets/menu/Play Rect.png")
@@ -37,8 +40,8 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def play():
     while True:
-        import main
-        game()
+        from main import jeu
+        jeu()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -50,6 +53,7 @@ def play():
 
 
 def options():
+
     global volume
     global position,position2
     position=300
@@ -67,6 +71,7 @@ def options():
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
         SCREEN.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         SCREEN.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
+
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
@@ -90,6 +95,24 @@ def options():
         pygame.draw.rect(SCREEN, (53, 53,53 ), pygame.Rect(50, 200, position3, 10)) 
         pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 200, position, 10)) 
         pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(50, 350, position2, 10)) 
+        OPTIONS_PLUS = Button(image=None, pos=(380, 185),
+                            text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_MOINS = Button(image=None, pos=(380, 235),
+                            text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_PLUS2 = Button(image=None, pos=(380, 330),
+                        text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_MOINS2 = Button(image=None, pos=(380, 380),
+                        text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
+
+
+        buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
+
+        for button in buttonlist:
+            button.changeColor(OPTIONS_MOUSE_POS)
+            button.update(SCREEN)
+
+        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 200, position, 10)) 
+        pygame.draw.rect(SCREEN, (127, 127, 127), pygame.Rect(45, 350, position2, 10)) 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

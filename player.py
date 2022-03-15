@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
 
     def damage(self, amount) :
         if self.health <= 0 :
-            import menu
+            from main import main_menu
             self.game.all_players.remove(self)
         else :
             self.health -= amount

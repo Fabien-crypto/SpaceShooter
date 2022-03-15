@@ -6,9 +6,9 @@ from button import Button
 import sys
 
 def main():
-    pygame.init()
     
-
+    pygame.init() 
+    mixer.init()
     #Icone jeu#
     a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
     image1 = pygame.image.load("assets/menu/Play Rect.png")
@@ -16,7 +16,7 @@ def main():
     pygame.display.set_icon(a)
 
     #Musique de fond#
-    mixer.init()
+    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
     volumejeux = 0.5
@@ -75,7 +75,7 @@ def main():
             screen.blit(background, (0, y_background))
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-        clock.tick(60)
+        clock.tick(6)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
@@ -83,6 +83,7 @@ def main():
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
+        game.Touch_animation_group.draw(screen)
 
 
         #Affichage du score #
