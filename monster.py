@@ -26,8 +26,6 @@ class Monster(pygame.sprite.Sprite):
 
     def damage(self, amount) :
         self.health -= amount
-        touch = Touch_animation(self.rect.centerx, self.rect.centery, 1)
-        self.game.Touch_animation_group.add(touch)
         if self.health <= 0:
             explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
             self.game.explosion_group.add(explosion)
@@ -42,15 +40,3 @@ class Monster(pygame.sprite.Sprite):
 
     def launch_laser(self) :
         self.all_laser.add(Laser_ennemie(self))
-
-    def update(self):
-        animation_speed = 20
-        #update explosion animation
-        self.counter += 1
-        if self.counter >= animation_speed and self.index < len(self.images) - 1:
-            self.counter = 0
-            self.index += 1
-            self.image = self.images[self.index]
-        #if the animation is complete, delete explosion
-        if self.index >= len(self.images) - 1 and self.counter >= animation_speed:
-            self.kill()
