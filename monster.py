@@ -22,8 +22,7 @@ class Monster(pygame.sprite.Sprite):
         self.rect.x = randint(-15,360)
         self.rect.y = -10
         self.delay = 90
-        self.counter = 0
-
+ 
     def damage(self, amount) :
         self.health -= amount
         if self.health <= 0:
@@ -40,3 +39,6 @@ class Monster(pygame.sprite.Sprite):
 
     def launch_laser(self) :
         self.all_laser.add(Laser_ennemie(self))
+
+
+

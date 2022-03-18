@@ -1,4 +1,3 @@
-import mailbox
 import time 
 import pygame
 from pygame import mixer
@@ -6,18 +5,60 @@ from game import Game
 from button import Button
 import sys
 
-pygame.init() 
-mixer.init()
-def main():
-      
-    #Icone jeu#
-    a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
-    image1 = pygame.image.load("assets/menu/Play Rect.png")
-    image1 = pygame.transform.scale(image1,(150,50))
-    pygame.display.set_icon(a)
 
-    #Musique de fond#
-    
+pygame.init()
+pygame.font.init()
+
+
+
+#Icone jeu#
+a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+image1 = pygame.image.load("assets/menu/Play Rect.png")
+image1 = pygame.transform.scale(image1,(150,50))
+pygame.display.set_icon(a)
+
+screen = pygame.display.set_mode((400, 600))
+
+#Définition de la police d'écriture #
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("assets/menu/font.ttf", size)
+
+def paused() :
+    while pause:
+        pygame.init()
+        mixer.init()
+        mixer.music.pause()
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+        PLAY_BUTTON = Button(image=image1, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=image1, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+            button.changeColor(OPTIONS_MOUSE_POS)
+            button.update(screen)
+
+        pygame.display.update() 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN :
+                if event.key==pygame.K_ESCAPE:
+                    mixer.music.unpause()
+                    return 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    mixer.music.unpause() 
+                    return 0
+                if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    print("test")
+                if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    from menu import main_menu
+                    main_menu()
+
+def jeu():
+
+    #Musique de fond#    
+    mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
     volumejeux = 0.5
@@ -27,48 +68,11 @@ def main():
     clock = pygame.time.Clock()
     # Générer une fenêtre de jeu #
     pygame.display.set_caption("SpaceShoot")
-    screen = pygame.display.set_mode((400, 600))
 
     #background# 
     background = pygame.image.load('assets/fond/frameBackground.png')
     background = pygame.transform.scale(background,(400,600))
     y_background = 0
-
-    #Définition de la police d'écriture #
-    def get_font(size): # Returns Press-Start-2P in the desired size
-        return pygame.font.Font("assets/menu/font.ttf", size)
-
-    def paused() :
-        while pause:
-            mixer.music.pause()
-            OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
-            PLAY_BUTTON = Button(image=image1, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
-            OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
-            QUIT_BUTTON = Button(image=image1, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
-
-            for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
-                button.changeColor(OPTIONS_MOUSE_POS)
-                button.update(screen)
-                
-            pygame.display.update() 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                if event.type == pygame.KEYDOWN :
-                    if event.key==pygame.K_ESCAPE:
-                        mixer.music.unpause()
-                        return 0
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                        mixer.music.unpause() 
-                        return 0
-                    if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                        print("test")
-                    if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                        from menu import main_menu
-                        main_menu()
-
-
     #Chargement de notre jeu#
     game = Game()
 
@@ -94,6 +98,7 @@ def main():
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
+
 
         #Affichage du score #
         Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
@@ -141,9 +146,10 @@ def main():
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
+                    global pause
                     pause = True
                     paused()
             elif event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
 
-main()
+jeu()

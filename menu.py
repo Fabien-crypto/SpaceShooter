@@ -5,6 +5,9 @@ from button import Button
 from pygame import mixer
 from game import Game
 
+pygame.init()
+
+
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 image1 = pygame.image.load("assets/menu/Play Rect.png")
@@ -37,8 +40,8 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 
 def play():
     while True:
-        from main import main
-        main()
+        from main import jeu
+        jeu()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -50,6 +53,7 @@ def play():
 
 
 def options():
+
     global volume
     global position,position2
     position=300
@@ -66,7 +70,7 @@ def options():
         SCREEN.blit(OPTIONS_TEXT, OPTIONS_RECT)
         SCREEN.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         SCREEN.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
-        
+
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_PLUS = Button(image=None, pos=(380, 185),
