@@ -1,6 +1,6 @@
 import time 
 import pygame
-from menu import main_menu
+from menu import main_menu,options
 from pygame import mixer
 from game import Game
 from button import Button
@@ -72,13 +72,11 @@ def paused() :
                     return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    game.player.score = 0
                     mixer.music.unpause() 
                     return 0
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    print("test")
+                    options("jeu")
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    from menu import main_menu
                     game = Game()
                     save(scoretest)
                     main_menu()

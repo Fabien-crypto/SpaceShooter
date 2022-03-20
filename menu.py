@@ -52,8 +52,7 @@ def play():
         pygame.display.update()
 
 
-def options():
-
+def options(menu):
     global volume
     global position,position2
     position=300
@@ -98,7 +97,11 @@ def options():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                    main_menu()
+                    if menu == "menu":
+                        main_menu()
+                    else:
+                        from main import jeu
+                        jeu()
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <300: 
                         volume += 0.05
@@ -151,7 +154,7 @@ def main_menu():
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     play()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    options()
+                    options("menu")
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
