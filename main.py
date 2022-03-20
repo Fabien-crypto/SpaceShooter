@@ -148,7 +148,6 @@ def paused() :
                     return 0
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     options("jeu")
-                    pygame.display.update()
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     save(score)
                     mixer.music.unpause()
