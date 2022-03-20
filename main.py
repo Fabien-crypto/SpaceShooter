@@ -1,5 +1,6 @@
 import time 
 import pygame
+from menu import main_menu
 from pygame import mixer
 from game import Game
 from button import Button
@@ -88,7 +89,7 @@ def paused() :
                     main_menu()
 
 def jeu():
-
+    global scoretest
     #Musique de fond#    
     mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
@@ -174,16 +175,16 @@ def jeu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
                 running = False
+                scoretest = game.player.score
+                save(scoretest)
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
                     global pause
-                    global scoretest
                     scoretest = game.player.score
                     pause = True
                     paused()
             elif event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
-
-jeu()
+main_menu()
