@@ -127,10 +127,10 @@ def main_menu():
                             text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
         QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
-
-        Best_Score_TEXT = get_font(12).render("Meilleur Score: 1289 ", True, "white")
+        from main import saveread
+        Best_Score_TEXT = get_font(12).render("Meilleur Score: "+ saveread("bestscore"), True, "white")
         Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
-        Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+str(game.player.score)), True, "white")
+        Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+ saveread("prec")), True, "white")
         Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
         SCREEN.blit(MENU_TEXT, MENU_RECT)
         SCREEN.blit(Best_Score_TEXT, Best_Score_RECT)

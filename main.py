@@ -6,9 +6,37 @@ from button import Button
 import sys
 
 
+
+
 pygame.init()
 pygame.font.init()
 
+
+
+def saveread(score):
+    with open("scores.txt","r") as fichier:
+        list = fichier.readlines()
+        fichier.close()
+    if score == "bestscore":
+        return list[0].replace("\n","")
+        
+    else:
+        return list[1]
+
+def save(score):
+    bestscore = saveread("bestscore")
+    print(bestscore)
+    print(score)
+    fichier = open("scores.txt","w+")
+    if score > int(bestscore):
+        print("ok")
+        fichier.write(str(score)+"\n"+str(score))
+        print("test")
+        fichier.close()
+    else:
+        fichier.write(bestscore+"\n"+str(score))
+        fichier.close()
+        
 
 
 #Icone jeu#
@@ -47,12 +75,16 @@ def paused() :
                     return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    game.player.score = 0
                     mixer.music.unpause() 
                     return 0
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     print("test")
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     from menu import main_menu
+                    game = Game()
+                    print(scoretest)
+                    save(scoretest)
                     main_menu()
 
 def jeu():
@@ -147,6 +179,8 @@ def jeu():
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
                     global pause
+                    global scoretest
+                    scoretest = game.player.score
                     pause = True
                     paused()
             elif event.type == pygame.KEYUP :
