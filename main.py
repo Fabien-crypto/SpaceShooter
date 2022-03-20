@@ -26,13 +26,9 @@ def saveread(score):
 
 def save(score):
     bestscore = saveread("bestscore")
-    print(bestscore)
-    print(score)
     fichier = open("scores.txt","w+")
     if score > int(bestscore):
-        print("ok")
         fichier.write(str(score)+"\n"+str(score))
-        print("test")
         fichier.close()
     else:
         fichier.write(bestscore+"\n"+str(score))
@@ -84,7 +80,6 @@ def paused() :
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     from menu import main_menu
                     game = Game()
-                    print(scoretest)
                     save(scoretest)
                     main_menu()
 
