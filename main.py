@@ -1,4 +1,3 @@
-import time 
 import pygame
 from pygame import mixer
 from game import Game
@@ -7,9 +6,31 @@ import sys
 
 
 
-
+# Initialisation du jeu
 pygame.init()
 pygame.font.init()
+
+#Définition de la police d'écriture #
+
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("assets/menu/font.ttf", size)
+
+
+#Musique de fond
+mixer.init()
+mixer.music.load('sounds/01_Title Screen.mp3')
+volume = 0.5
+mixer.music.set_volume(volume)
+mixer.music.play()
+
+
+#Icone jeu#
+a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+image1 = pygame.image.load("assets/menu/Play Rect.png")
+image1 = pygame.transform.scale(image1,(150,50))
+pygame.display.set_icon(a)
+
+screen = pygame.display.set_mode((400, 600))
 
 
 def saveread(score):
@@ -32,19 +53,6 @@ def save(score):
         fichier.write(bestscore+"\n"+str(score))
         fichier.close()
         
-
-
-#Icone jeu#
-a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
-image1 = pygame.image.load("assets/menu/Play Rect.png")
-image1 = pygame.transform.scale(image1,(150,50))
-pygame.display.set_icon(a)
-
-screen = pygame.display.set_mode((400, 600))
-
-#Définition de la police d'écriture #
-def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("assets/menu/font.ttf", size)
 
 def options(menu):
     global volume
