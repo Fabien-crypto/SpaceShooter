@@ -13,7 +13,6 @@ pygame.init()
 pygame.font.init()
 
 
-
 def saveread(score):
     with open("scores.txt","r") as fichier:
         list = fichier.readlines()
@@ -79,6 +78,7 @@ def paused() :
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     game = Game()
                     save(scoretest)
+                    mixer.music.unpause()
                     main_menu()
 
 def jeu():

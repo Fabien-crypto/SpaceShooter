@@ -7,7 +7,6 @@ from game import Game
 
 pygame.init()
 
-
 #Icone jeu#
 a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 image1 = pygame.image.load("assets/menu/Play Rect.png")
@@ -23,7 +22,6 @@ mixer.music.play()
 
 game = Game()
 #définition de notre menu #
-pygame.init()
 SCREEN = pygame.display.set_mode((400, 600))
 pygame.display.set_caption("SpaceShoot")
 
@@ -38,18 +36,22 @@ prec_score = pygame.transform.scale(prec_score,(20,20))
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
-def play():
-    while True:
-        from main import jeu
-        jeu()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.PLAY_BACK.checkForInput(pygame.PLAY_MOUSE_POS):
-                    main_menu()
-        pygame.display.update()
+
+
+# Je comprends pas à quoi sert cette fonction (marche sans juste en important jeu)
+
+# def play():                                                               
+#     while True:
+#         from main import jeu
+#         jeu()
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 sys.exit()
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 if pygame.PLAY_BACK.checkForInput(pygame.PLAY_MOUSE_POS):
+#                     main_menu()
+#         pygame.display.update()
 
 
 def options(menu):
@@ -152,7 +154,8 @@ def main_menu():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    play()
+                    from main import jeu
+                    jeu()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options("menu")
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
