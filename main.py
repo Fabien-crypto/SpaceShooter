@@ -15,7 +15,6 @@ pygame.font.init()
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
-
 #Musique de fond
 mixer.init()
 mixer.music.load('sounds/01_Title Screen.mp3')
@@ -25,10 +24,13 @@ mixer.music.play()
 
 
 #Icone jeu#
-a = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
-image1 = pygame.image.load("assets/menu/Play Rect.png")
-image1 = pygame.transform.scale(image1,(150,50))
-pygame.display.set_icon(a)
+icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+pygame.display.set_icon(icon)
+
+#Background des boutons#
+buttonimg = pygame.image.load("assets/menu/button.png")
+buttonimg = pygame.transform.scale(buttonimg,(150,50))
+
 
 screen = pygame.display.set_mode((400, 600))
 
@@ -124,9 +126,9 @@ def paused() :
         mixer.init()
         mixer.music.pause()
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
-        PLAY_BUTTON = Button(image=image1, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=image1, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+        PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(OPTIONS_MOUSE_POS)
@@ -167,11 +169,11 @@ def main_menu():
 
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
-        PLAY_BUTTON = Button(image=image1, pos=(200, 200), 
+        PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), 
                             text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=image1, pos=(200, 280), 
+        OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), 
                             text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=image1, pos=(200, 360), 
+        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), 
                             text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
         Best_Score_TEXT = get_font(12).render("Meilleur Score: "+ saveread("bestscore"), True, "white")
         Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
