@@ -104,7 +104,9 @@ def options(menu):
                     if menu == "menu":
                         main_menu()
                     else:
-                        jeu()
+                        screen.blit(background, (0, 0))
+                        return 0
+
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <300: 
                         volume += 0.05
@@ -121,7 +123,7 @@ def options(menu):
 
 
 def paused() :
-    while pause:
+    while True:
         pygame.init()
         mixer.init()
         mixer.music.pause()
@@ -144,20 +146,19 @@ def paused() :
                     return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    mixer.music.unpause() 
+                    mixer.music.unpause()
                     return 0
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     options("jeu")
+                    pygame.display.update()
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    game = Game()
-                    save(scoretest)
+                    save(score)
                     mixer.music.unpause()
                     main_menu()
 
 
 def main_menu():
     while True:
-
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
         best_score = pygame.transform.scale(best_score,(20,20))
@@ -207,7 +208,7 @@ def main_menu():
 
 
 def jeu():
-    global scoretest
+    global score
     #Musique de fond#    
     mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
@@ -221,6 +222,7 @@ def jeu():
     pygame.display.set_caption("SpaceShoot")
 
     #background# 
+    global background
     background = pygame.image.load('assets/fond/frameBackground.png')
     background = pygame.transform.scale(background,(400,600))
     y_background = 0
@@ -241,6 +243,7 @@ def jeu():
             screen.blit(background, (0, y_background))
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
+
         clock.tick(60)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
@@ -293,15 +296,13 @@ def jeu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
                 running = False
-                scoretest = game.player.score
-                save(scoretest)
+                score = game.player.score
+                save(score)
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
-                    global pause
-                    scoretest = game.player.score
-                    pause = True
+                    score = game.player.score
                     paused()
             elif event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
