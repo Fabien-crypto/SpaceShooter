@@ -19,6 +19,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 mixer.init()
 mixer.music.load('sounds/01_Title Screen.mp3')
 volume = 0.5
+volumejeux = 0.5
 mixer.music.set_volume(volume)
 mixer.music.play()
 
@@ -55,12 +56,12 @@ def save(score):
         fichier.write(bestscore+"\n"+str(score))
         fichier.close()
         
-
+position=300
+position2=300
 def options(menu):
     global volume
+    global volumejeux
     global position,position2
-    position=300
-    position2=300
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         screen.fill("black")
@@ -92,8 +93,10 @@ def options(menu):
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(screen)
 
-        pygame.draw.rect(screen, (127, 127, 127), pygame.Rect(45, 200, position, 10)) 
-        pygame.draw.rect(screen, (127, 127, 127), pygame.Rect(45, 350, position2, 10)) 
+        pygame.draw.rect(screen, (75,75,75), pygame.Rect(45, 200, 300, 10),2,5)
+        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 200, position, 10),0,5)
+        pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(45, 350, 300, 10),2,5)
+        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 350, position2, 10),0,5) 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -110,12 +113,14 @@ def options(menu):
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <300: 
                         volume += 0.05
+                        volumejeux += 0.05
                         position += 30
 
                     mixer.music.set_volume(volume)
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
                         volume -= 0.05
+                        volumejeux -= 0.05
                         position -= 30
                     mixer.music.set_volume(volume)
 
@@ -209,11 +214,11 @@ def main_menu():
 
 def jeu():
     global score
+    global volumejeux
     #Musique de fond#    
     mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
-    volumejeux = 0.5
     mixer.music.set_volume(volumejeux)
 
     #Temps du jeu #

@@ -36,6 +36,9 @@ class Monster(pygame.sprite.Sprite):
         if self.game.check_collision(self,self.game.all_players) :
             self.game.player.damage(self.attack)
             self.game.all_monsters.remove(self)
+        if self.rect.y > 490 :
+            self.remove()
+            self.game.player.damage(self.attack)
 
     def launch_laser(self) :
         self.all_laser.add(Laser_ennemie(self))
