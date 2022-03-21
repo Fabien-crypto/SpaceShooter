@@ -61,7 +61,6 @@ def save(score,vol,pos):
         fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
         fichier.close()
 
-volume = float(saveread("volume"))
 position=int(saveread("position"))
 position2=250
 def options(menu):
