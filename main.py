@@ -95,8 +95,8 @@ def options(menu):
 
         pygame.draw.rect(screen, (75,75,75), pygame.Rect(42.5, 197, 306, 16),3,5)
         pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 200, position, 10),0,2)
-        pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(43, 348, 304, 14),2,5)
-        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 350, position2, 10),0,3) 
+        pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(42.5, 347, 306, 16),3,5)
+        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 350, position2, 10),0,2) 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
