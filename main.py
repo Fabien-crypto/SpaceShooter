@@ -129,8 +129,6 @@ def options(menu):
 
 def paused() :
     while True:
-        pygame.init()
-        mixer.init()
         mixer.music.pause()
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
@@ -155,7 +153,6 @@ def paused() :
                     return 0
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     options("jeu")
-                    pygame.display.update()
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     save(score)
                     mixer.music.unpause()
@@ -196,6 +193,7 @@ def main_menu():
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
         
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -208,7 +206,6 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
-
         pygame.display.update()
 
 
