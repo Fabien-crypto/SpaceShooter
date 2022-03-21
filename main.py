@@ -4,6 +4,8 @@ from game import Game
 from button import Button
 import sys
 
+#Fonctions pour sauvegarde#
+
 def saveread(score):
     with open("scores.txt","r") as fichier:
         list = fichier.readlines()
@@ -16,6 +18,18 @@ def saveread(score):
         return list[3]
     else:
         return list[1].replace("\n","")
+
+
+def save(score,vol,pos):
+    bestscore = saveread("bestscore")
+    fichier = open("scores.txt","w+")
+    if score > int(bestscore):
+        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
+        fichier.close()
+    else:
+        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
+        fichier.close()
+
 
 # Initialisation du jeu
 pygame.init()
@@ -49,17 +63,6 @@ screen = pygame.display.set_mode((400, 600))
 
 
 
-print(saveread("volume"))
-
-def save(score,vol,pos):
-    bestscore = saveread("bestscore")
-    fichier = open("scores.txt","w+")
-    if score > int(bestscore):
-        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-    else:
-        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
 
 position=int(saveread("position"))
 position2=250
@@ -223,7 +226,6 @@ def jeu():
     global score
     global volumejeux
     #Musique de fond#    
-    mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
 
