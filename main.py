@@ -4,7 +4,18 @@ from game import Game
 from button import Button
 import sys
 
-
+def saveread(score):
+    with open("scores.txt","r") as fichier:
+        list = fichier.readlines()
+        fichier.close()
+    if score == "bestscore":
+        return list[0].replace("\n","")
+    elif score == "volume":
+        return list[2].replace("\n","")
+    elif score == "position":
+        return list[3]
+    else:
+        return list[1].replace("\n","")
 
 # Initialisation du jeu
 pygame.init()
@@ -18,7 +29,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 #Musique de fond
 mixer.init()
 mixer.music.load('sounds/01_Title Screen.mp3')
-volume = 0.5
+volume = float(saveread("volume"))
 volumejeux = 0.5
 mixer.music.set_volume(volume)
 mixer.music.play()
@@ -36,27 +47,22 @@ buttonimg = pygame.transform.scale(buttonimg,(150,50))
 screen = pygame.display.set_mode((400, 600))
 
 
-def saveread(score):
-    with open("scores.txt","r") as fichier:
-        list = fichier.readlines()
-        fichier.close()
-    if score == "bestscore":
-        return list[0].replace("\n","")
-        
-    else:
-        return list[1]
 
-def save(score):
+
+print(saveread("volume"))
+
+def save(score,vol,pos):
     bestscore = saveread("bestscore")
     fichier = open("scores.txt","w+")
     if score > int(bestscore):
-        fichier.write(str(score)+"\n"+str(score))
+        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
         fichier.close()
     else:
-        fichier.write(bestscore+"\n"+str(score))
+        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
         fichier.close()
-        
-position=250
+
+volume = float(saveread("volume"))
+position=int(saveread("position"))
 position2=250
 def options(menu):
     global volume
@@ -115,18 +121,18 @@ def options(menu):
                         volume += 0.05
                         volumejeux += 0.05
                         position += 25
+                        save(int(saveread("score")),round(volume,2),position)
 
-                    mixer.music.set_volume(volume)
-                    mixer.music.set_volume(volumejeux)
+                    mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
                         volume -= 0.05
                         volumejeux -= 0.05
                         position -= 25
+                        save(int(saveread("score")),round(volume,2),position)
 
-                    mixer.music.set_volume(volume)
-                    mixer.music.set_volume(volumejeux)
+                    mixer.music.set_volume(float(saveread("volume")))
 
         pygame.display.update()
 
@@ -158,7 +164,7 @@ def paused() :
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     options("jeu")
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    save(score)
+                    save(score,saveread("volume"),saveread("position"))
                     mixer.music.unpause()
                     main_menu()
 
@@ -221,7 +227,6 @@ def jeu():
     mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
-    mixer.music.set_volume(volumejeux)
 
     #Temps du jeu #
     clock = pygame.time.Clock()
@@ -304,7 +309,7 @@ def jeu():
             if event.type == pygame.QUIT :
                 running = False
                 score = game.player.score
-                save(score)
+                save(score,saveread("volume"),saveread("position"))
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
