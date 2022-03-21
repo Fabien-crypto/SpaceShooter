@@ -56,8 +56,8 @@ def save(score):
         fichier.write(bestscore+"\n"+str(score))
         fichier.close()
         
-position=300
-position2=300
+position=250
+position2=250
 def options(menu):
     global volume
     global volumejeux
@@ -67,7 +67,7 @@ def options(menu):
         screen.fill("black")
         OPTIONS_TEXT = get_font(12).render("Choisir tes paramètres.", True, "white")
         OPTIONS_TEXT1 = get_font(12).render("Musique de fond", True, "white")
-        OPTIONS_TEXT2 = get_font(12).render("Effets spéciaux Fx", True, "white")
+        OPTIONS_TEXT2 = get_font(12).render("Effets spéciaux ", True, "white")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(200, 50))
         OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(200, 150))
         OPTIONS_RECT2 = OPTIONS_TEXT1.get_rect(center=(200,300))
@@ -77,14 +77,14 @@ def options(menu):
 
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS = Button(image=None, pos=(380, 185),
-                            text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS = Button(image=None, pos=(380, 235),
+        OPTIONS_MOINS = Button(image=None, pos=(350, 205),
                             text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_PLUS2 = Button(image=None, pos=(380, 330),
-                        text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-        OPTIONS_MOINS2 = Button(image=None, pos=(380, 380),
+        OPTIONS_PLUS = Button(image=None, pos=(380, 205),
+                            text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_MOINS2 = Button(image=None, pos=(350, 355),
                         text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
+        OPTIONS_PLUS2 = Button(image=None, pos=(380, 355),
+                        text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
 
 
         buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
@@ -93,10 +93,10 @@ def options(menu):
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(screen)
 
-        pygame.draw.rect(screen, (75,75,75), pygame.Rect(42.5, 197, 306, 16),3,5)
-        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 200, position, 10),0,2)
-        pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(42.5, 347, 306, 16),3,5)
-        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(45, 350, position2, 10),0,2) 
+        pygame.draw.rect(screen, (75,75,75), pygame.Rect(72, 197, 256, 16),3,5)
+        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(75, 200, position, 10),0,2)
+        pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(72, 347, 256, 16),3,5)
+        pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(75, 350, position2, 10),0,2) 
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -111,10 +111,10 @@ def options(menu):
                         return 0
 
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
-                    if volume<0.5 and position <300: 
+                    if volume<0.5 and position <250: 
                         volume += 0.05
                         volumejeux += 0.05
-                        position += 30
+                        position += 25
 
                     mixer.music.set_volume(volume)
                     mixer.music.set_volume(volumejeux)
@@ -123,7 +123,7 @@ def options(menu):
                     if volume>0 and position >0: 
                         volume -= 0.05
                         volumejeux -= 0.05
-                        position -= 30
+                        position -= 25
 
                     mixer.music.set_volume(volume)
                     mixer.music.set_volume(volumejeux)
