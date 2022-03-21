@@ -33,8 +33,8 @@ class Player(pygame.sprite.Sprite):
         bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.health, 5]
         back_bar_color = (212, 63, 23)
         back_bar_position = [self.rect.x -10, self.rect.y + self.rect.height, self.max_health, 5]
-        pygame.draw.rect(surface, back_bar_color, back_bar_position) #dessin barre de vie rouge #
-        pygame.draw.rect(surface, bar_color, bar_position) #dessin barre de vie verte#
+        pygame.draw.rect(surface, back_bar_color, back_bar_position,0,3) #dessin barre de vie rouge #
+        pygame.draw.rect(surface, bar_color, bar_position,0,3) #dessin barre de vie verte#
 
     def launch_projectile(self):
         #Création nouvelle instance du projectile et intervalle de temps#
