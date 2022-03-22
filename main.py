@@ -22,7 +22,6 @@ pygame.init()
 pygame.font.init()
 
 #Définition de la police d'écriture #
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
@@ -34,7 +33,6 @@ volumejeux = 0.5
 mixer.music.set_volume(volume)
 mixer.music.play()
 
-
 #Icone jeu#
 icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
 pygame.display.set_icon(icon)
@@ -42,11 +40,7 @@ pygame.display.set_icon(icon)
 #Background des boutons#
 buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
-
-
 screen = pygame.display.set_mode((400, 600))
-
-
 
 def save(score,vol,pos):
     bestscore = saveread("bestscore")
@@ -80,7 +74,6 @@ def options(menu):
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
         screen.blit(POURCENTAGE_FOND,OPTIONS_POURCENTAGE_FOND_RECT )
-
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS = Button(image=None, pos=(350, 205),
@@ -92,18 +85,15 @@ def options(menu):
         OPTIONS_PLUS2 = Button(image=None, pos=(380, 355),
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
 
-
         buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
 
         for button in buttonlist:
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(screen)
-
         pygame.draw.rect(screen, (75,75,75), pygame.Rect(72, 197, 256, 16),3,5)
         pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(75, 200, position, 10),0,2)
         pygame.draw.rect(screen, (75, 75, 75), pygame.Rect(72, 347, 256, 16),3,5)
         pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(75, 350, position2, 10),0,2) 
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -115,7 +105,6 @@ def options(menu):
                     else:
                         screen.blit(background, (0, 0))
                         return 0
-
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <250: 
                         volume += 0.05
@@ -123,9 +112,7 @@ def options(menu):
                         position += 25
                         volume = round(volume,2)
                         save(int(saveread("score")),volume,position)
-
                     mixer.music.set_volume(float(saveread("volume")))
-
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
                         volume -= 0.05
@@ -133,11 +120,8 @@ def options(menu):
                         position -= 25
                         volume = round(volume,2)
                         save(int(saveread("score")),volume,position)
-
                     mixer.music.set_volume(float(saveread("volume")))
-
         pygame.display.update()
-
 
 def paused() :
     while True:
@@ -170,9 +154,7 @@ def paused() :
                     mixer.music.unpause()
                     main_menu()
 
-
 def main_menu():
-    
     while True:
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
@@ -180,9 +162,7 @@ def main_menu():
         prec_score = pygame.image.load('assets/icon/prec_score.png')
         prec_score = pygame.transform.scale(prec_score,(20,20))
         screen.blit(BG, (0, 0))
-
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), 
@@ -201,11 +181,9 @@ def main_menu():
         screen.blit(best_score,(55,438))
         screen.blit(prec_score,(55,488))
 
-
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
-        
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -219,6 +197,42 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
+        pygame.display.update()
+
+def over_menu():
+    while True:
+        BG = pygame.image.load("assets/menu/Background.png")
+        best_score = pygame.image.load('assets/icon/best_score.png')
+        best_score = pygame.transform.scale(best_score,(20,20))
+        prec_score = pygame.image.load('assets/icon/prec_score.png')
+        prec_score = pygame.transform.scale(prec_score,(20,20))
+        screen.blit(BG, (0, 0))
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
+        MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
+        BACK_MENU_BUTTON = Button(image=buttonimg, pos=(200, 200), 
+                            text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+        Best_Score_TEXT = get_font(12).render("Meilleur Score: "+ saveread("bestscore"), True, "white")
+        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
+        Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+ saveread("prec")), True, "white")
+        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
+        screen.blit(MENU_TEXT, MENU_RECT)
+        screen.blit(Best_Score_TEXT, Best_Score_RECT)
+        screen.blit(Prec_Score_TEXT, Prec_Score_RECT)
+        screen.blit(best_score,(55,438))
+        screen.blit(prec_score,(55,488))
+
+        for button in [BACK_MENU_BUTTON]:
+            button.changeColor(MENU_MOUSE_POS)
+            button.update(screen)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if BACK_MENU_BUTTON.checkForInput(MENU_MOUSE_POS):
+                    main_menu()
         pygame.display.update()
 
 
@@ -255,18 +269,16 @@ def jeu():
         else :
             y_background = 0
             screen.blit(background, (0, y_background))
+
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-
         clock.tick(60)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
-
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
-
 
         #Affichage du score #
         Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
@@ -276,10 +288,8 @@ def jeu():
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
             projectile.move()
-
         for monster in game.all_monsters :
             monster.forward()
-        
         game.player.update_health_bar(screen)
         game.spawn_monster()
 
@@ -303,10 +313,11 @@ def jeu():
             game.player.rect.x = 0 - game.player.rect.width 
         if (game.player.rect.x) < -(game.player.rect.width) :
             game.player.rect.x = screen.get_width()
-
+        if game.player.health <= 0 :
+            over_menu()
         #mettre à jour l'écran  #
-        "bonjour"
         pygame.display.flip()
+
         #fermeture du jeu#
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
