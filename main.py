@@ -314,6 +314,7 @@ def jeu():
             game.player.rect.x = screen.get_width()
 
         #mettre à jour l'écran  #
+        "bonjour"
         pygame.display.flip()
         #fermeture du jeu#
         for event in pygame.event.get():
