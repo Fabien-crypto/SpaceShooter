@@ -269,7 +269,8 @@ class Game:
 #Initialisation du jeu#
 pygame.init()
 pygame.font.init()
-mixer.init()
+pygame.init()
+
 
 #Définition de la police d'écriture #
 def get_font(size): # Returns Press-Start-2P in the desired size
@@ -389,7 +390,6 @@ def options(menu):
 
 def paused() :
     while True:
-        mixer.music.pause()
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
@@ -528,7 +528,7 @@ def jeu():
 
     # Boucle jeu #
     running = True
-    pygame.key.set_repeat
+    pygame.key.set_repeat()
     while running :
         #appliquer arrière plan et défilement#
         y_background += 1/2
@@ -605,6 +605,7 @@ def jeu():
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
+                    mixer.music.pause()
                     score = game.player.score
                     paused()
             elif event.type == pygame.KEYUP :
