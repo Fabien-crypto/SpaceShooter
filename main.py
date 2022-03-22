@@ -1,7 +1,6 @@
 import pygame
 from pygame import mixer
 from random import randint
-from button import Button
 import sys
 
 
