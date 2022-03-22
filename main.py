@@ -271,6 +271,8 @@ pygame.init()
 pygame.font.init()
 pygame.init()
 
+# Nom de la fenêtre #
+pygame.display.set_caption("SpaceShoot")
 
 #Définition de la police d'écriture #
 def get_font(size): # Returns Press-Start-2P in the desired size
