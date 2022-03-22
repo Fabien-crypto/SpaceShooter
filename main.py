@@ -84,7 +84,6 @@ def options(menu):
                         text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_PLUS2 = Button(image=None, pos=(380, 355),
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-
         buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
 
         for button in buttonlist:
@@ -130,11 +129,9 @@ def paused() :
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
         QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
-
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(screen)
-
         pygame.display.update() 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -184,7 +181,6 @@ def main_menu():
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -225,7 +221,6 @@ def over_menu():
         for button in [BACK_MENU_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

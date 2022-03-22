@@ -4,6 +4,7 @@ from laser_ennemie import Laser_ennemie
 import time
 from explosion import Explosion
 
+
 #Classe du monstre#
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -11,7 +12,7 @@ class Monster(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        soundObj.set_volume(1.0)
+        soundObj.set_volume(objvol)
         self.health = 30
         self.max_health = 30
         self.attack = 10
