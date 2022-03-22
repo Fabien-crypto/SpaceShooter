@@ -12,6 +12,7 @@ pygame.font.init()
 #Définition de la police d'écriture #
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
+game = Game()
 
 #Musique de fond
 mixer.init()
@@ -147,6 +148,20 @@ def options(menu):
 
         pygame.display.update()
 
+def read(n):
+    content = []
+    with open("score.txt","r") as score :
+        for line in score :
+            content = line.split(",")
+        return content[1]
+
+def save():
+    with open("score.txt","w") as fichier:
+        fichier.write(str(game.player.best_score)+","+str(game.player.score))
+        if game.player.score>int(read(0)) :
+            fichier.write(str(game.player.score)+","+str(game.player.score))
+            game.player.best_score = game.player.score
+            
 def paused() :
     while True:
         mixer.music.pause()
@@ -162,6 +177,7 @@ def paused() :
         pygame.display.update() 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                save()
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
@@ -176,6 +192,9 @@ def paused() :
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     save(score)
                     mixer.music.unpause()
+                    save()
+                    print(read(0))
+                    from menu import main_menu
                     main_menu()
 
 def main_menu():

@@ -12,6 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.attack = 15
         self.velocity = 7
         self.score = 0
+        self.best_score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
