@@ -12,7 +12,7 @@ class Monster(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        soundObj.set_volume(objvol)
+        soundObj.set_volume(1)
         self.health = 30
         self.max_health = 30
         self.attack = 10

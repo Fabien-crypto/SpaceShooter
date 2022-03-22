@@ -1,7 +1,5 @@
 import pygame
-from main import saveread
 
-objvol = saveread("volume")
 
 #classe projectile de notre vaisseau #
 class Projectile(pygame.sprite.Sprite) :
@@ -9,7 +7,7 @@ class Projectile(pygame.sprite.Sprite) :
     def __init__(self, player):
         super().__init__()
         soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
-        soundObj.set_volume(objvol)
+        soundObj.set_volume(1)
         soundObj.play()
         self.velocity = 9
         self.player = player

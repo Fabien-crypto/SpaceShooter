@@ -120,6 +120,7 @@ def options(menu):
                         volume = round(volume,2)
                         save(int(saveread("score")),volume,position)
                     mixer.music.set_volume(float(saveread("volume")))
+
         pygame.display.update()
 
 def paused() :
