@@ -4,6 +4,39 @@ from random import randint
 import sys
 
 
+
+#Fonctions pour la sauvegarde#
+
+def saveread(score):
+    with open("scores.txt","r") as fichier:
+        list = fichier.readlines()
+        fichier.close()
+    if score == "bestscore":
+        return list[0].replace("\n","")
+    elif score == "volume":
+        return list[2].replace("\n","")
+    elif score == "position":
+        return list[3].replace("\n","")
+    elif score == "volume2":
+        return list[4].replace("\n","")
+    elif score == "position2":
+        return list[5]
+    else:
+        return list[1].replace("\n","")
+
+def save(score,vol,pos,vol2,pos2):
+    bestscore = saveread("bestscore")
+    fichier = open("scores.txt","w+")
+    if score > int(bestscore):
+        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
+        fichier.close()
+    else:
+        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
+        fichier.close()
+
+
+volume2 = float(saveread("volume2"))
+
 class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
 		self.image = image
@@ -33,6 +66,7 @@ class Button():
 			self.text = self.font.render(self.text_input, True, self.hovering_color)
 		else:
 			self.text = self.font.render(self.text_input, True, self.base_color)
+
 
 
 
@@ -70,6 +104,8 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 
+
+
 class Laser_ennemie(pygame.sprite.Sprite) :
     # Définir le constructeur de cette classe #
     def __init__(self, monster):
@@ -95,11 +131,11 @@ class Laser_ennemie(pygame.sprite.Sprite) :
 #Classe du monstre#s
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
-        global soundObj 
+        global monstervol
         super().__init__()
         self.game = game
-        soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        soundObj.set_volume(1)
+        monstervol = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
+        monstervol.set_volume(volume2)
         self.health = 30
         self.max_health = 30
         self.attack = 10
@@ -116,7 +152,7 @@ class Monster(pygame.sprite.Sprite):
         self.health -= amount
         if self.health <= 0:
             explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
-            soundObj.play()
+            monstervol.play()
             self.game.explosion_group.add(explosion)
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
@@ -164,8 +200,6 @@ class Projectile(pygame.sprite.Sprite) :
             self.remove()
         self.rect.y -= self.velocity
             
-
-
 
 
 class Player(pygame.sprite.Sprite):
@@ -230,8 +264,6 @@ class Player(pygame.sprite.Sprite):
 
 
 
-
-
 class Game:
     def __init__(self):
         #Génère notre joueur#
@@ -255,31 +287,6 @@ class Game:
             self.all_monsters.add(monster)
             self.last_monster = now
 
-
-#Fonctions pour la sauvegarde#
-
-def saveread(score):
-    with open("scores.txt","r") as fichier:
-        list = fichier.readlines()
-        fichier.close()
-    if score == "bestscore":
-        return list[0].replace("\n","")
-    elif score == "volume":
-        return list[2].replace("\n","")
-    elif score == "position":
-        return list[3]
-    else:
-        return list[1].replace("\n","")
-
-def save(score,vol,pos):
-    bestscore = saveread("bestscore")
-    fichier = open("scores.txt","w+")
-    if score > int(bestscore):
-        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-    else:
-        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
 
 objvol = float(saveread("volume"))
 
@@ -316,13 +323,14 @@ screen = pygame.display.set_mode((400, 600))
 
 #Déclaration des variables de son#
 volume = float(saveread("volume"))
-
-
-
 position=int(saveread("position"))
-position2=250
+position2= int(saveread("position2"))
+volume2 = float(saveread("volume2"))
+
 def options(menu):
     global volume
+    global volume2
+    global monstervol
     global volumejeux
     global position,position2
     while True:
@@ -379,22 +387,39 @@ def options(menu):
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <250: 
                         volume += 0.05
-                        volumejeux += 0.05
                         position += 25
                         volume = round(volume,2)
-                        save(int(saveread("score")),volume,position)
+                        save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
 
                     mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
                         volume -= 0.05
-                        volumejeux -= 0.05
                         position -= 25
                         volume = round(volume,2)
-                        save(int(saveread("score")),volume,position)
+                        save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
 
                     mixer.music.set_volume(float(saveread("volume")))
+
+                if OPTIONS_PLUS2.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume2<1 and position2<250: 
+                        volume2 += 0.1
+                        position2 += 25
+                        volume2 = round(volume2,1)
+
+                        save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
+
+                    monstervol.set_volume(float(saveread("volume2")))
+
+                if OPTIONS_MOINS2.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume2>0 and position2>0: 
+                        volume2 -= 0.1
+                        position2 -= 25
+                        volume2 = round(volume2,1)
+                        save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
+
+                    game.monster.monstervol.set_volume(float(saveread("volume2")))
 
         pygame.display.update()
 
