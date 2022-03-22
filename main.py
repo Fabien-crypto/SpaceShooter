@@ -3,6 +3,7 @@ from pygame import mixer
 from random import randint
 import sys
 
+
 #Fonctions pour la sauvegarde#
 
 def saveread(score):
@@ -485,7 +486,6 @@ def main_menu():
         screen.blit(best_score,(55,438))
         screen.blit(prec_score,(55,488))
 
-
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
@@ -503,7 +503,9 @@ def main_menu():
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
+            
         pygame.display.update()
+
 
 def jeu():
     global score
@@ -599,6 +601,7 @@ def jeu():
                 score = game.player.score
                 save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                 pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
