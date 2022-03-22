@@ -7,10 +7,11 @@ from explosion import Explosion
 #Classe du monstre#
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
+        global soundObj 
         super().__init__()
         self.game = game
-        self.explosion = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        self.explosion.set_volume(0.5)
+        soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
+        soundObj.set_volume(1.0)
         self.health = 30
         self.max_health = 30
         self.attack = 10
@@ -27,6 +28,7 @@ class Monster(pygame.sprite.Sprite):
         self.health -= amount
         if self.health <= 0:
             explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
+            soundObj.play()
             self.game.explosion_group.add(explosion)
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
