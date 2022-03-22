@@ -1,17 +1,15 @@
+import pygame_textinput
 import pygame
 from pygame import mixer
 from game import Game
 from button import Button
 import sys
 
-
-
 # Initialisation du jeu
 pygame.init()
 pygame.font.init()
 
 #Définition de la police d'écriture #
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
@@ -22,7 +20,6 @@ volume = 0.5
 volumejeux = 0.5
 mixer.music.set_volume(volume)
 mixer.music.play()
-
 
 #Icone jeu#
 icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -55,7 +52,28 @@ def save(score):
     else:
         fichier.write(bestscore+"\n"+str(score))
         fichier.close()
-        
+    
+
+###########################################
+### Gestion d'une session d'utilisateur ###
+###########################################
+def session() :
+    run = True
+    textinput = pygame_textinput.TextInputVisualizer()
+    while run:
+        screen.fill((225, 225, 225))
+        events = pygame.event.get()
+        textinput.update(events)
+        screen.blit(textinput.surface, (200, 200))
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    pygame.quit()
+                    sys.exit()
+        pygame.display.update()
+
+
+                    
 position=250
 position2=250
 def options(menu):
@@ -67,14 +85,16 @@ def options(menu):
         screen.fill("black")
         OPTIONS_TEXT = get_font(12).render("Choisir tes paramètres.", True, "white")
         OPTIONS_TEXT1 = get_font(12).render("Musique de fond", True, "white")
-        OPTIONS_TEXT2 = get_font(12).render("Effets spéciaux ", True, "white")
+        POURCENTAGE_FOND = get_font(12).render((str(int(200*(volume)))+"%"), True, "white")
+        OPTIONS_TEXT2 = get_font(12).render("Effets spéciaux", True, "white")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(200, 50))
         OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(200, 150))
+        OPTIONS_POURCENTAGE_FOND_RECT = POURCENTAGE_FOND.get_rect(center=(40, 205))
         OPTIONS_RECT2 = OPTIONS_TEXT1.get_rect(center=(200,300))
         screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
+        screen.blit(POURCENTAGE_FOND,OPTIONS_POURCENTAGE_FOND_RECT )
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
-
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS = Button(image=None, pos=(350, 205),
@@ -85,7 +105,6 @@ def options(menu):
                         text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_PLUS2 = Button(image=None, pos=(380, 355),
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
-
 
         buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
 
@@ -115,7 +134,6 @@ def options(menu):
                         volume += 0.05
                         volumejeux += 0.05
                         position += 25
-
                     mixer.music.set_volume(volume)
                     mixer.music.set_volume(volumejeux)
 
@@ -124,12 +142,10 @@ def options(menu):
                         volume -= 0.05
                         volumejeux -= 0.05
                         position -= 25
-
                     mixer.music.set_volume(volume)
                     mixer.music.set_volume(volumejeux)
 
         pygame.display.update()
-
 
 def paused() :
     while True:
@@ -137,7 +153,7 @@ def paused() :
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Abandonner", font=get_font(12), base_color="White", hovering_color="Green")
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(OPTIONS_MOUSE_POS)
@@ -162,9 +178,7 @@ def paused() :
                     mixer.music.unpause()
                     main_menu()
 
-
 def main_menu():
-    
     while True:
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
@@ -172,9 +186,7 @@ def main_menu():
         prec_score = pygame.image.load('assets/icon/prec_score.png')
         prec_score = pygame.transform.scale(prec_score,(20,20))
         screen.blit(BG, (0, 0))
-
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), 
@@ -193,11 +205,9 @@ def main_menu():
         screen.blit(best_score,(55,438))
         screen.blit(prec_score,(55,488))
 
-
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
-        
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -213,7 +223,6 @@ def main_menu():
                     sys.exit()
         pygame.display.update()
 
-
 def jeu():
     global score
     global volumejeux
@@ -225,6 +234,7 @@ def jeu():
 
     #Temps du jeu #
     clock = pygame.time.Clock()
+
     # Générer une fenêtre de jeu #
     pygame.display.set_caption("SpaceShoot")
 
@@ -255,11 +265,9 @@ def jeu():
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
-
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
-
 
         #Affichage du score #
         Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
@@ -269,12 +277,13 @@ def jeu():
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
             projectile.move()
-
         for monster in game.all_monsters :
             monster.forward()
-        
         game.player.update_health_bar(screen)
         game.spawn_monster()
+
+        if game.player.health <= 0 :
+            main_menu()
 
         # vérifier si le joueur souhaite bouger ou tirer#
         if game.pressed.get(pygame.K_SPACE):
