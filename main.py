@@ -390,10 +390,10 @@ def options(menu):
 
 def paused() :
     while True:
-        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
         QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(OPTIONS_MOUSE_POS)
@@ -403,6 +403,7 @@ def paused() :
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.unpause()
@@ -417,6 +418,8 @@ def paused() :
                     save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                     mixer.music.unpause()
                     main_menu()
+    
+
 
 def over_menu():
     BG = pygame.image.load("assets/menu/Background.png")
