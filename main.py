@@ -34,8 +34,6 @@ class Button():
 		else:
 			self.text = self.font.render(self.text_input, True, self.base_color)
 
-
-
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, size):
         pygame.sprite.Sprite.__init__(self)
@@ -69,7 +67,6 @@ class Explosion(pygame.sprite.Sprite):
         if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
             self.kill()
 
-
 class Laser_ennemie(pygame.sprite.Sprite) :
     # Définir le constructeur de cette classe #
     def __init__(self, monster):
@@ -89,8 +86,6 @@ class Laser_ennemie(pygame.sprite.Sprite) :
         from main import screen
         if self.rect.y >  screen.get_height():
             self.remove()
-
-
 
 #Classe du monstre#s
 class Monster(pygame.sprite.Sprite):
@@ -135,8 +130,6 @@ class Monster(pygame.sprite.Sprite):
     def launch_laser(self) :
         self.all_laser.add(Laser_ennemie(self))
 
-
-
 #classe projectile de notre vaisseau #
 class Projectile(pygame.sprite.Sprite) :
     # Définir le constructeur de cette classe #
@@ -163,17 +156,13 @@ class Projectile(pygame.sprite.Sprite) :
         if self.rect.y < -10 :
             self.remove()
         self.rect.y -= self.velocity
-            
-
-
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.health = 100
-        self.max_health = 100
+        self.health = 50
+        self.max_health = 50
         self.attack = 15
         self.velocity = 7
         self.score = 0
@@ -187,11 +176,7 @@ class Player(pygame.sprite.Sprite):
         self.last_shoot =  pygame.time.get_ticks()
 
     def damage(self, amount) :
-        if self.health < 0 :
-            from main import main_menu
-            main_menu()
-        else :
-            self.health -= amount
+        self.health -= amount
 
     def update_health_bar(self,surface):
         bar_color = (35, 188, 27)
@@ -228,10 +213,6 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
 
-
-
-
-
 class Game:
     def __init__(self):
         #Génère notre joueur#
@@ -254,7 +235,6 @@ class Game:
         if now - self.last_monster > self.delay_spawn :
             self.all_monsters.add(monster)
             self.last_monster = now
-
 
 #Fonctions pour la sauvegarde#
 
@@ -284,23 +264,16 @@ def save(score,vol,pos):
 objvol = float(saveread("volume"))
 
 #Initialisation du jeu#
-
 pygame.init()
 pygame.font.init()
+mixer.init()
 
 #Définition de la police d'écriture #
-
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
 #Musique de fond
-mixer.init()
-mixer.music.load('sounds/01_Title Screen.mp3')
-volume = float(saveread("volume"))
 volumejeux = 0.5
-mixer.music.set_volume(volume)
-mixer.music.play()
-
 
 #Icone jeu#
 icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -309,16 +282,10 @@ pygame.display.set_icon(icon)
 #Background des boutons#
 buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
-
-
 screen = pygame.display.set_mode((400, 600))
-
 
 #Déclaration des variables de son#
 volume = float(saveread("volume"))
-
-
-
 position=int(saveread("position"))
 position2=250
 def options(menu):
@@ -398,7 +365,6 @@ def options(menu):
 
         pygame.display.update()
 
-
 def paused() :
     while True:
         mixer.music.pause()
@@ -430,32 +396,30 @@ def paused() :
                     mixer.music.unpause()
                     main_menu()
 
-
-
-
 def over_menu():
+    BG = pygame.image.load("assets/menu/Background.png")
+    screen.blit(BG, (0, 0))
+    MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
+    MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
+    OVER_TEXT = get_font(20).render("Game Over!", True, "white" )
+    OVER_RECT = OVER_TEXT.get_rect(center=(200, 150))
+    screen.blit(OVER_TEXT, OVER_RECT)
+    best_score = pygame.image.load('assets/icon/best_score.png')
+    best_score = pygame.transform.scale(best_score,(20,20))
+    prec_score = pygame.image.load('assets/icon/prec_score.png')
+    prec_score = pygame.transform.scale(prec_score,(20,20))
+    Best_Score_TEXT = get_font(12).render("Meilleur Score: "+ saveread("bestscore"), True, "white")
+    Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 350))
+    Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+ saveread("prec")), True, "white")
+    Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 400))
+    screen.blit(MENU_TEXT, MENU_RECT)
+    screen.blit(Best_Score_TEXT, Best_Score_RECT)
+    screen.blit(Prec_Score_TEXT, Prec_Score_RECT)
+    screen.blit(best_score,(55,338))
+    screen.blit(prec_score,(55,388))
     while True:
-        BG = pygame.image.load("assets/menu/Background.png")
-        best_score = pygame.image.load('assets/icon/best_score.png')
-        best_score = pygame.transform.scale(best_score,(20,20))
-        prec_score = pygame.image.load('assets/icon/prec_score.png')
-        prec_score = pygame.transform.scale(prec_score,(20,20))
-        screen.blit(BG, (0, 0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
-        MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
-        BACK_MENU_BUTTON = Button(image=buttonimg, pos=(200, 200), 
-                            text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
-        Best_Score_TEXT = get_font(12).render("Meilleur Score: "+ saveread("bestscore"), True, "white")
-        Best_Score_RECT = Best_Score_TEXT.get_rect(center=(215, 450))
-        Prec_Score_TEXT = get_font(12).render(("Score Précédent: "+ saveread("prec")), True, "white")
-        Prec_Score_RECT = Prec_Score_TEXT.get_rect(center=(215, 500))
-        screen.blit(MENU_TEXT, MENU_RECT)
-        screen.blit(Best_Score_TEXT, Best_Score_RECT)
-        screen.blit(Prec_Score_TEXT, Prec_Score_RECT)
-        screen.blit(best_score,(55,438))
-        screen.blit(prec_score,(55,488))
-
+        BACK_MENU_BUTTON = Button(image=buttonimg, pos=(200, 250), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
         for button in [BACK_MENU_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
@@ -468,10 +432,10 @@ def over_menu():
                     main_menu()
         pygame.display.update()
 
-
-
-def main_menu():
-    
+def main_menu(): 
+    mixer.music.load('sounds/01_Title Screen.mp3')
+    mixer.music.set_volume(volume)
+    mixer.music.play()
     while True:
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
@@ -520,12 +484,10 @@ def main_menu():
                     sys.exit()
         pygame.display.update()
 
-
 def jeu():
     global score
     global volumejeux
     #Musique de fond#    
-    mixer.init()
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
 
@@ -554,18 +516,23 @@ def jeu():
         else :
             y_background = 0
             screen.blit(background, (0, y_background))
+
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-
         clock.tick(60)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
-
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
 
+        if game.player.health <= 0:
+            soundObj = pygame.mixer.Sound('sounds/game_over.wav')
+            soundObj.set_volume(1)
+            soundObj.play()
+            pygame.mixer.music.stop()
+            over_menu()
 
         #Affichage du score #
         Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
@@ -602,11 +569,8 @@ def jeu():
             game.player.rect.x = 0 - game.player.rect.width 
         if (game.player.rect.x) < -(game.player.rect.width) :
             game.player.rect.x = screen.get_width()
-        if game.player.health <= 0:
-            over_menu()
 
         #mettre à jour l'écran  #
-        "bonjour"
         pygame.display.flip()
         #fermeture du jeu#
         for event in pygame.event.get():
@@ -622,4 +586,5 @@ def jeu():
                     paused()
             elif event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
+
 main_menu()
