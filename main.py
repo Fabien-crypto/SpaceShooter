@@ -4,6 +4,9 @@ from game import Game
 from button import Button
 import sys
 
+
+#Fonctions pour la sauvegarde#
+
 def saveread(score):
     with open("scores.txt","r") as fichier:
         list = fichier.readlines()
@@ -17,7 +20,20 @@ def saveread(score):
     else:
         return list[1].replace("\n","")
 
-# Initialisation du jeu
+def save(score,vol,pos):
+    bestscore = saveread("bestscore")
+    fichier = open("scores.txt","w+")
+    if score > int(bestscore):
+        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
+        fichier.close()
+    else:
+        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
+        fichier.close()
+
+objvol = float(saveread("volume"))
+
+#Initialisation du jeu#
+
 pygame.init()
 pygame.font.init()
 
@@ -47,18 +63,11 @@ buttonimg = pygame.transform.scale(buttonimg,(150,50))
 screen = pygame.display.set_mode((400, 600))
 
 
-
-def save(score,vol,pos):
-    bestscore = saveread("bestscore")
-    fichier = open("scores.txt","w+")
-    if score > int(bestscore):
-        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-    else:
-        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-
+#Déclaration des variables de son#
 volume = float(saveread("volume"))
+
+
+
 position=int(saveread("position"))
 position2=250
 def options(menu):
@@ -135,7 +144,7 @@ def options(menu):
                         save(int(saveread("score")),volume,position)
 
                     mixer.music.set_volume(float(saveread("volume")))
-
+                                
         pygame.display.update()
 
 
