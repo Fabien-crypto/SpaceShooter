@@ -3,6 +3,35 @@ from pygame import mixer
 from random import randint
 import sys
 
+#Fonctions pour la sauvegarde#
+
+def saveread(score):
+    with open("scores.txt","r") as fichier:
+        list = fichier.readlines()
+        fichier.close()
+    if score == "bestscore":
+        return list[0].replace("\n","")
+    elif score == "volume":
+        return list[2].replace("\n","")
+    elif score == "position":
+        return list[3].replace("\n","")
+    elif score == "volume2":
+        return list[4].replace("\n","")
+    elif score == "position2":
+        return list[5]
+    else:
+        return list[1].replace("\n","")
+
+def save(score,vol,pos,vol2,pos2):
+    bestscore = saveread("bestscore")
+    fichier = open("scores.txt","w+")
+    if score > int(bestscore):
+        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
+        fichier.close()
+    else:
+        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
+        fichier.close()
+
 
 class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
@@ -94,7 +123,7 @@ class Monster(pygame.sprite.Sprite):
         super().__init__()
         self.game = game
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        soundObj.set_volume(1)
+        soundObj.set_volume(float(saveread("volume2")))
         self.health = 30
         self.max_health = 30
         self.attack = 10
@@ -136,7 +165,7 @@ class Projectile(pygame.sprite.Sprite) :
     def __init__(self, player):
         super().__init__()
         soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
-        soundObj.set_volume(1)
+        soundObj.set_volume(float(saveread("volume2")))
         soundObj.play()
         self.velocity = 9
         self.player = player
@@ -236,33 +265,6 @@ class Game:
             self.all_monsters.add(monster)
             self.last_monster = now
 
-#Fonctions pour la sauvegarde#
-
-def saveread(score):
-    with open("scores.txt","r") as fichier:
-        list = fichier.readlines()
-        fichier.close()
-    if score == "bestscore":
-        return list[0].replace("\n","")
-    elif score == "volume":
-        return list[2].replace("\n","")
-    elif score == "position":
-        return list[3]
-    else:
-        return list[1].replace("\n","")
-
-def save(score,vol,pos):
-    bestscore = saveread("bestscore")
-    fichier = open("scores.txt","w+")
-    if score > int(bestscore):
-        fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-    else:
-        fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos))
-        fichier.close()
-
-objvol = float(saveread("volume"))
-
 #Initialisation du jeu#
 pygame.init()
 pygame.font.init()
@@ -272,8 +274,6 @@ mixer.init()
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/menu/font.ttf", size)
 
-#Musique de fond
-volumejeux = 0.5
 
 #Icone jeu#
 icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -286,11 +286,12 @@ screen = pygame.display.set_mode((400, 600))
 
 #Déclaration des variables de son#
 volume = float(saveread("volume"))
-position=int(saveread("position"))
-position2=250
+position= int(saveread("position"))
+position2= int(saveread("position2"))
+volume2 = float(saveread("volume2"))
+
 def options(menu):
-    global volume
-    global volumejeux
+    global volume,volume2
     global position,position2
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
@@ -299,14 +300,17 @@ def options(menu):
         OPTIONS_TEXT1 = get_font(12).render("Musique de fond", True, "white")
         OPTIONS_TEXT2 = get_font(12).render("Effets spéciaux ", True, "white")
         POURCENTAGE_FOND = get_font(12).render((str(int(200*(volume)))+"%"), True, "white")
+        POURCENTAGE_FOND2 = get_font(12).render((str(int(200*(volume2)))+"%"), True, "white")
         OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(200, 50))
         OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(200, 150))
         OPTIONS_RECT2 = OPTIONS_TEXT1.get_rect(center=(200,300))
         OPTIONS_POURCENTAGE_FOND_RECT = POURCENTAGE_FOND.get_rect(center=(40, 205))
+        OPTIONS_POURCENTAGE_FOND_RECT2 = POURCENTAGE_FOND.get_rect(center=(40, 355))
         screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
-        screen.blit(POURCENTAGE_FOND,OPTIONS_POURCENTAGE_FOND_RECT )
+        screen.blit(POURCENTAGE_FOND,OPTIONS_POURCENTAGE_FOND_RECT)
+        screen.blit(POURCENTAGE_FOND2,OPTIONS_POURCENTAGE_FOND_RECT2)
 
         OPTIONS_BACK = Button(image=None, pos=(200, 460), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
@@ -325,6 +329,7 @@ def options(menu):
         for button in buttonlist:
             button.changeColor(OPTIONS_MOUSE_POS)
             button.update(screen)
+
 
         pygame.draw.rect(screen, (75,75,75), pygame.Rect(72, 197, 256, 16),3,5)
         pygame.draw.rect(screen, (140, 140, 140), pygame.Rect(75, 200, position, 10),0,2)
@@ -346,20 +351,36 @@ def options(menu):
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume<0.5 and position <250: 
                         volume += 0.05
-                        volumejeux += 0.05
                         position += 25
                         volume = round(volume,2)
-                        save(int(saveread("score")),volume,position)
+                        save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
 
                     mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
                         volume -= 0.05
-                        volumejeux -= 0.05
                         position -= 25
                         volume = round(volume,2)
-                        save(int(saveread("score")),volume,position)
+                        save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
+
+                    mixer.music.set_volume(float(saveread("volume")))
+
+                if OPTIONS_PLUS2.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume2<0.5 and position2 <250: 
+                        volume2 += 0.05
+                        position2 += 25
+                        volume2 = round(volume2,2)
+                        save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
+
+                    mixer.music.set_volume(float(saveread("volume")))
+
+                if OPTIONS_MOINS2.checkForInput(OPTIONS_MOUSE_POS):
+                    if volume2>0 and position2 >0: 
+                        volume2 -= 0.05
+                        position2 -= 25
+                        volume2 = round(volume2,2)
+                        save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
 
                     mixer.music.set_volume(float(saveread("volume")))
 
@@ -392,7 +413,7 @@ def paused() :
                 if OPTIONS_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     options("jeu")
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    save(score,saveread("volume"),saveread("position"))
+                    save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                     mixer.music.unpause()
                     main_menu()
 
@@ -433,7 +454,7 @@ def over_menu():
         pygame.display.update()
 
 def main_menu(): 
-    mixer.music.load('sounds/01_Title Screen.mp3')
+    mixer.music.load('sounds/01_Title-Screen.wav')
     mixer.music.set_volume(volume)
     mixer.music.play()
     while True:
@@ -486,7 +507,6 @@ def main_menu():
 
 def jeu():
     global score
-    global volumejeux
     #Musique de fond#    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
@@ -577,7 +597,7 @@ def jeu():
             if event.type == pygame.QUIT :
                 running = False
                 score = game.player.score
-                save(score,saveread("volume"),saveread("position"))
+                save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                 pygame.quit()
             if event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
