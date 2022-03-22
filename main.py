@@ -5,6 +5,7 @@ from button import Button
 import sys
 
 
+
 #Fonctions pour la sauvegarde#
 
 def saveread(score):
@@ -144,7 +145,7 @@ def options(menu):
                         save(int(saveread("score")),volume,position)
 
                     mixer.music.set_volume(float(saveread("volume")))
-                                
+
         pygame.display.update()
 
 

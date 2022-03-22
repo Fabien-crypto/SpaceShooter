@@ -2,6 +2,7 @@ import pygame
 from player import Player
 from monster import Monster
 import time
+
 #Classe jeu #
 class Game:
     def __init__(self):
