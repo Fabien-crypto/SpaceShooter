@@ -12,7 +12,6 @@ class Player(pygame.sprite.Sprite):
         self.attack = 15
         self.velocity = 7
         self.score = 0
-        self.best_score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
@@ -23,7 +22,11 @@ class Player(pygame.sprite.Sprite):
         self.last_shoot =  pygame.time.get_ticks()
 
     def damage(self, amount) :
-        self.health -= amount
+        if self.health < 0 :
+            from main import main_menu
+            main_menu()
+        else :
+            self.health -= amount
 
     def update_health_bar(self,surface):
         bar_color = (35, 188, 27)
