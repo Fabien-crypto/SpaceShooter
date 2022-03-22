@@ -22,11 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.last_shoot =  pygame.time.get_ticks()
 
     def damage(self, amount) :
-        if self.health < 0 :
-            from main import main_menu
-            main_menu()
-        else :
-            self.health -= amount
+        self.health -= amount
 
     def update_health_bar(self,surface):
         bar_color = (35, 188, 27)

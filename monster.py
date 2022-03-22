@@ -37,11 +37,12 @@ class Monster(pygame.sprite.Sprite):
     def forward(self):
         self.rect.y += self.velocity
         if self.game.check_collision(self,self.game.all_players) :
-            self.game.player.damage(self.attack)
             self.game.all_monsters.remove(self)
+            self.game.player.damage(self.attack)
         if self.rect.y > 590 :
             self.game.all_monsters.remove(self)
             self.game.player.damage(self.attack)
+            
 
             
 
