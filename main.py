@@ -576,7 +576,7 @@ def jeu():
 
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
-            soundObj.set_volume(1)
+            soundObj.set_volume(volume)
             soundObj.play()
             pygame.mixer.music.stop()
             over_menu()
