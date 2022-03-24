@@ -29,6 +29,9 @@ def save(score,vol,pos,vol2,pos2):
     if score > int(bestscore):
         fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
+    elif score == -1:
+        fichier.write(str(0)+"\n"+str(0)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
+        fichier.close()
     else:
         fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
@@ -316,7 +319,9 @@ def options(menu):
         screen.blit(POURCENTAGE_FOND,OPTIONS_POURCENTAGE_FOND_RECT)
         screen.blit(POURCENTAGE_FOND2,OPTIONS_POURCENTAGE_FOND_RECT2)
 
-        OPTIONS_BACK = Button(image=None, pos=(200, 460), 
+        RESET_BUTTON = Button(image=buttonimg, pos=(200, 460), text_input="Reset", font=get_font(12), base_color="White", hovering_color="Green")
+
+        OPTIONS_BACK = Button(image=None, pos=(200, 550), 
                             text_input="BACK", font=get_font(12), base_color="white", hovering_color="Green")
         OPTIONS_MOINS = Button(image=None, pos=(350, 205),
                             text_input="-",font=get_font(12), base_color="white", hovering_color="Green")
@@ -328,7 +333,7 @@ def options(menu):
                         text_input="+",font=get_font(12), base_color="white", hovering_color="Green")
 
 
-        buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK]
+        buttonlist = [OPTIONS_MOINS,OPTIONS_MOINS2,OPTIONS_PLUS,OPTIONS_PLUS2,OPTIONS_BACK,RESET_BUTTON]
 
         for button in buttonlist:
             button.changeColor(OPTIONS_MOUSE_POS)
@@ -387,7 +392,17 @@ def options(menu):
                         save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
 
                     mixer.music.set_volume(float(saveread("volume")))
+                
+                if RESET_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    volume = 0.5
+                    volume2 = 0.5
+                    position = 250
+                    position2 = 250
+                    save(-1,volume,position,volume2,position2)
 
+
+                mixer.music.set_volume(float(saveread("volume")))
+                
         pygame.display.update()
 
 def paused() :
