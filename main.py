@@ -312,7 +312,7 @@ def options(menu):
         OPTIONS_RECT1 = OPTIONS_TEXT1.get_rect(center=(200, 150))
         OPTIONS_RECT2 = OPTIONS_TEXT1.get_rect(center=(200,300))
         OPTIONS_POURCENTAGE_FOND_RECT = POURCENTAGE_FOND.get_rect(center=(40, 205))
-        OPTIONS_POURCENTAGE_FOND_RECT2 = POURCENTAGE_FOND.get_rect(center=(40, 355))
+        OPTIONS_POURCENTAGE_FOND_RECT2 = POURCENTAGE_FOND2.get_rect(center=(40, 355))
         screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
