@@ -546,11 +546,10 @@ def jeu():
     #Chargement de notre jeu#
     game = Game()
 
-
+    #Chargement image pour score et bestscore#
     best_score = pygame.image.load('assets/icon/best_score.png')
     prec_score = pygame.image.load('assets/icon/prec_score.png')
     bestscore_TEXT = get_font(13).render(saveread("bestscore"), True, "white" )
-    screen.blit(prec_score,(55,488))
     
     # Boucle jeu #
     running = True
