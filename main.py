@@ -546,6 +546,12 @@ def jeu():
     #Chargement de notre jeu#
     game = Game()
 
+
+    best_score = pygame.image.load('assets/icon/best_score.png')
+    prec_score = pygame.image.load('assets/icon/prec_score.png')
+    bestscore_TEXT = get_font(13).render(saveread("bestscore"), True, "white" )
+    screen.blit(prec_score,(55,488))
+    
     # Boucle jeu #
     running = True
     pygame.key.set_repeat()
@@ -577,9 +583,16 @@ def jeu():
             over_menu()
 
         #Affichage du score #
-        Score_TEXT = get_font(14).render(("Score : "+ str(game.player.score)), True, "white" )
-        Score_RECT = Score_TEXT.get_rect(center=(100, 20))
+        best_score = pygame.transform.scale(best_score,(20,20))
+        prec_score = pygame.transform.scale(prec_score,(20,20))
+        Score_TEXT = get_font(13).render((str(game.player.score)), True, "white" )
+        Score_RECT = Score_TEXT.get_rect(center=(70, 55))
+        bestscore_RECT = best_score.get_rect(center=(70, 30))
+
+        screen.blit(prec_score,(20,45))
+        screen.blit(best_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
+        screen.blit(bestscore_TEXT, bestscore_RECT)
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
