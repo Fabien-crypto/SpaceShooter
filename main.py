@@ -586,12 +586,11 @@ def jeu():
         prec_score = pygame.transform.scale(prec_score,(20,20))
         Score_TEXT = get_font(13).render((str(game.player.score)), True, "white" )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 50))
+        bestscore_RECT = best_score.get_rect(topleft=(60, 18))
         
-        if game.player.score < int(saveread("bestscore")):
-            bestscore_RECT = best_score.get_rect(topleft=(60, 18))
-
-        else:
+        if game.player.score > int(saveread("bestscore")):
             bestscore_TEXT = Score_TEXT
+
 
         screen.blit(prec_score,(20,45))
         screen.blit(best_score,(20,15))
