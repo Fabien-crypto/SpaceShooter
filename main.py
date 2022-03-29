@@ -413,8 +413,8 @@ def warning() :
 
         warning_TEXT = get_font(9).render("Etes-vous sûr de vouloir réinitialiser ?", True, "white")
         warning_RECT = warning_TEXT.get_rect(topleft=(20, 200))
-        warning_TEXT2 =  get_font(9).render("(cela inclut le meilleur score)", True, "white")
-        warning_RECT2 = warning_TEXT.get_rect(topleft=(50, 215))
+        warning_TEXT2 =  get_font(9).render("(cela inclut le score)", True, "white")
+        warning_RECT2 = warning_TEXT.get_rect(topleft=(100, 220))
         screen.blit(warning_TEXT, warning_RECT)
         screen.blit(warning_TEXT2, warning_RECT2)
 
