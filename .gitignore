@@ -2,3 +2,6 @@
 *.pyc
 
 *.pyc
+assets/menu/blurrybg.jpg
+assets/menu/currentbg.jpg
+scores.txt
