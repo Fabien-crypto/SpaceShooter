@@ -352,7 +352,8 @@ def options(menu):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     if menu == "menu":
-                        main_menu()
+                        
+                        return 0
                     else:
                         screen.blit(background, (0, 0))
                         return 0
