@@ -632,6 +632,9 @@ def jeu():
         if game.player.score > int(saveread("bestscore")):
             bestscore_TEXT = Score_TEXT
             color="Red"
+            Record_TEXT = get_font(8).render("Nouveau record !",True,"Red")
+            Record_RECT = Record_TEXT.get_rect(topleft=(20, 45))
+            screen.blit(Record_TEXT,Record_RECT)
 
         screen.blit(prec_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
