@@ -195,8 +195,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game):
         super().__init__()
         self.game = game
-        self.health = 50
-        self.max_health = 50
+        self.health = 100
+        self.max_health = 100
         self.attack = 15
         self.velocity = 7
         self.score = 0
@@ -568,8 +568,9 @@ def main_menu():
             
         pygame.display.update()
 
-
+color="White"
 def jeu():
+    global color
     global score
     #Musique de fond#    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
@@ -624,20 +625,17 @@ def jeu():
             over_menu()
 
         #Affichage du score #
-        best_score = pygame.transform.scale(best_score,(20,20))
         prec_score = pygame.transform.scale(prec_score,(20,20))
-        Score_TEXT = get_font(13).render((str(game.player.score)), True, "white" )
-        Score_RECT = Score_TEXT.get_rect(topleft=(60, 50))
-        bestscore_RECT = best_score.get_rect(topleft=(60, 18))
+        Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
+        Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
         
         if game.player.score > int(saveread("bestscore")):
             bestscore_TEXT = Score_TEXT
+            color="Red"
 
-
-        screen.blit(prec_score,(20,45))
-        screen.blit(best_score,(20,15))
+        screen.blit(prec_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
-        screen.blit(bestscore_TEXT, bestscore_RECT)
+        
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
