@@ -363,8 +363,7 @@ def options(menu):
                         position += 25
                         volume = round(volume,2)
                         save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
-
-                    mixer.music.set_volume(float(saveread("volume")))
+                        mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_MOINS.checkForInput(OPTIONS_MOUSE_POS):
                     if volume>0 and position >0: 
@@ -372,8 +371,7 @@ def options(menu):
                         position -= 25
                         volume = round(volume,2)
                         save(int(saveread("score")),volume,position,saveread("volume2"),saveread("position2"))
-
-                    mixer.music.set_volume(float(saveread("volume")))
+                        mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_PLUS2.checkForInput(OPTIONS_MOUSE_POS):
                     if volume2<0.5 and position2 <250: 
@@ -381,8 +379,7 @@ def options(menu):
                         position2 += 25
                         volume2 = round(volume2,2)
                         save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
-
-                    mixer.music.set_volume(float(saveread("volume")))
+                        mixer.music.set_volume(float(saveread("volume")))
 
                 if OPTIONS_MOINS2.checkForInput(OPTIONS_MOUSE_POS):
                     if volume2>0 and position2 >0: 
@@ -390,20 +387,60 @@ def options(menu):
                         position2 -= 25
                         volume2 = round(volume2,2)
                         save(int(saveread("score")),saveread("volume"),saveread("position"),volume2,position2)
-
-                    mixer.music.set_volume(float(saveread("volume")))
+                        mixer.music.set_volume(float(saveread("volume")))
                 
                 if RESET_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
-                    volume = 0.5
-                    volume2 = 0.5
-                    position = 250
-                    position2 = 250
-                    save(-1,volume,position,volume2,position2)
-
-
-                mixer.music.set_volume(float(saveread("volume")))
-                
+                    if warning()==1:
+                        volume = 0.5
+                        volume2 = 0.5
+                        position = 250
+                        position2 = 250
+                        save(-1,volume,position,volume2,position2)
+                        mixer.music.set_volume(float(saveread("volume")))
+    
         pygame.display.update()
+
+
+def warning() :
+    screen.fill("black")
+    buttonimg1 = pygame.image.load("assets/menu/button.png")
+    buttonimg1 = pygame.transform.scale(buttonimg1,(100,30))  
+    while True:
+        color = (131, 136, 143)
+
+        pygame.draw.rect(screen, color, pygame.Rect(10, 175, 380, 130))
+
+        warning_TEXT = get_font(9).render("Etes-vous sûr de vouloir réinitialiser ?", True, "white")
+        warning_RECT = warning_TEXT.get_rect(topleft=(20, 200))
+        warning_TEXT2 =  get_font(9).render("(cela inclut le meilleur score)", True, "white")
+        warning_RECT2 = warning_TEXT.get_rect(topleft=(50, 215))
+        screen.blit(warning_TEXT, warning_RECT)
+        screen.blit(warning_TEXT2, warning_RECT2)
+
+        YES_BUTTON = Button(image=buttonimg1, pos=(130, 270), text_input="Oui", font=get_font(8), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=buttonimg1, pos=(260, 270), text_input="Quitter", font=get_font(8), base_color="White", hovering_color="Green")   
+        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
+
+        for button in [YES_BUTTON,QUIT_BUTTON]:
+            button.changeColor(OPTIONS_MOUSE_POS)
+            button.update(screen)
+        
+        pygame.display.update() 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN :
+                if event.key==pygame.K_ESCAPE:
+                    mixer.music.unpause()
+                    return 0
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    return 0
+                if YES_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
+                    return 1
+
+
 
 def paused() :
     while True:
@@ -437,6 +474,8 @@ def paused() :
                     main_menu()
     
 
+
+    
 
 def over_menu():
     BG = pygame.image.load("assets/menu/Background.png")
