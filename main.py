@@ -474,6 +474,7 @@ def paused() :
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                     mixer.music.unpause()
+                    color="White"
                     main_menu()
     
 
@@ -568,10 +569,11 @@ def main_menu():
             
         pygame.display.update()
 
-color="White"
+
 def jeu():
     global color
     global score
+    color="White"
     #Musique de fond#    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play()
