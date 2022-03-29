@@ -2,6 +2,7 @@ import pygame
 from pygame import mixer
 from random import randint
 import sys
+from PIL import Image, ImageFilter
 
 
 #Fonctions pour la sauvegarde#
@@ -355,7 +356,8 @@ def options(menu):
                         
                         return 0
                     else:
-                        screen.blit(background, (0, 0))
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
+                        screen.blit(BG2, (0, 0))
                         return 0
 
                 if OPTIONS_PLUS.checkForInput(OPTIONS_MOUSE_POS):
@@ -683,6 +685,12 @@ def jeu():
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.pause()
                     score = game.player.score
+                    pygame.image.save(screen,"assets/menu/currentbg.jpg")
+                    OriImage = Image.open('assets/menu/currentbg.jpg')
+                    blurImage = OriImage.filter(ImageFilter.BLUR)
+                    blurImage.save('assets/menu/blurrybg.jpg')
+                    BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
+                    screen.blit(BG2, (0, 0))
                     paused()
             elif event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
