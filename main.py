@@ -352,13 +352,15 @@ def options(menu):
                 sys.exit()
             if event.type == pygame.KEYDOWN :
                 if event.key==pygame.K_ESCAPE:
-                    BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
-                    screen.blit(BG2, (0, 0))
-                    return 0
+                    if menu == "menu":
+                        return 0
+                    else :
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
+                        screen.blit(BG2, (0, 0))
+                        return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
                     if menu == "menu":
-                        
                         return 0
                     else:
                         BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
