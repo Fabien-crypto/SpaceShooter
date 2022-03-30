@@ -640,7 +640,6 @@ def jeu():
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
         
         if game.player.score > int(saveread("bestscore")):
-            bestscore_TEXT = Score_TEXT
             color="Red"
             Record_TEXT = get_font(8).render("Nouveau record !",True,"Red")
             Record_RECT = Record_TEXT.get_rect(topleft=(20, 45))
