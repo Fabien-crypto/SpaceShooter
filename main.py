@@ -693,11 +693,12 @@ def jeu():
                     blurImage.save('assets/menu/blurrybg.jpg')
                     BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
                     screen.blit(BG2, (0, 0))
-                    game.pressed[pygame.K_DOWN] = False
-                    game.pressed[pygame.K_UP] = False
-                    game.pressed[pygame.K_RIGHT] = False
-                    game.pressed[pygame.K_LEFT] = False
-                    game.pressed[pygame.K_SPACE] = False
+
+                    listkeys = [pygame.K_DOWN,pygame.K_UP,pygame.K_RIGHT,pygame.K_SPACE,pygame.K_LEFT,pygame.K_s,pygame.K_z,pygame.K_q,pygame.K_d]
+
+                    for key in listkeys:
+                        game.pressed[key] = False
+
                     paused()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
