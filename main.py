@@ -264,11 +264,8 @@ class Game:
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
     def spawn_monster(self):
-        now = pygame.time.get_ticks()
         monster = Monster(self)
-        if now - self.last_monster > self.delay_spawn :
-            self.all_monsters.add(monster)
-            self.last_monster = now
+        self.all_monsters.add(monster)
 
 #Initialisation du jeu#
 pygame.init()
@@ -524,7 +521,7 @@ def over_menu():
                     main_menu()
         pygame.display.update()
 
-def main_menu(): 
+def main_menu():
     mixer.music.load('sounds/01_Title-Screen.wav')
     mixer.music.set_volume(volume)
     mixer.music.play()
@@ -535,9 +532,7 @@ def main_menu():
         prec_score = pygame.image.load('assets/icon/prec_score.png')
         prec_score = pygame.transform.scale(prec_score,(20,20))
         screen.blit(BG, (0, 0))
-
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), 
@@ -559,7 +554,6 @@ def main_menu():
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
-        
         
         for event in pygame.event.get():
             if event.type==pygame.KEYDOWN:
@@ -647,17 +641,15 @@ def jeu():
 
         screen.blit(prec_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
-        
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
             projectile.move()
-
         for monster in game.all_monsters :
             monster.forward()
-        
         game.player.update_health_bar(screen)
-        game.spawn_monster()
+        
+
 
         # vérifier si le joueur souhaite bouger ou tirer#
         if game.pressed.get(pygame.K_SPACE):
@@ -701,8 +693,13 @@ def jeu():
                     blurImage.save('assets/menu/blurrybg.jpg')
                     BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
                     screen.blit(BG2, (0, 0))
+                    game.pressed[pygame.K_DOWN] = False
+                    game.pressed[pygame.K_UP] = False
+                    game.pressed[pygame.K_RIGHT] = False
+                    game.pressed[pygame.K_LEFT] = False
+                    game.pressed[pygame.K_SPACE] = False
                     paused()
-            elif event.type == pygame.KEYUP :
+            if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
 
 main_menu()
