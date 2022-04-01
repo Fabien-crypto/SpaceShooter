@@ -112,6 +112,7 @@ class Laser_ennemie(pygame.sprite.Sprite) :
         self.rect = self.image.get_rect()
         self.rect.x = monster.rect.x + (monster.rect.width)/2 - self.image.get_width()/2
         self.rect.y = monster.rect.y
+
     def remove(self):
         self.monster.all_laser.remove(self)
     #classe mouvement du laser #
@@ -140,6 +141,7 @@ class Monster(pygame.sprite.Sprite):
         self.rect.x = randint(-15,360)
         self.rect.y = -10
         self.delay = 90
+        self.delay_spawn = 1000
  
     def damage(self, amount) :
         self.health -= amount
@@ -257,15 +259,18 @@ class Game:
         self.all_monsters = pygame.sprite.Group()
         self.monster  = Monster(self)
         self.pressed = {}
-        self.delay_spawn = 900
+        self.delay_spawn = 1000
         self.last_monster = pygame.time.get_ticks()
 
     def check_collision(self, sprite, group) :
         return pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_mask)
 
     def spawn_monster(self):
+        now = pygame.time.get_ticks()
         monster = Monster(self)
-        self.all_monsters.add(monster)
+        if now - self.last_monster > self.delay_spawn :
+            self.all_monsters.add(monster)
+            self.last_monster = now
 
 #Initialisation du jeu#
 pygame.init()
@@ -574,6 +579,8 @@ def main_menu():
         pygame.display.update()
 
 
+
+
 def jeu():
     global color
     global score
@@ -600,7 +607,14 @@ def jeu():
     
     # Boucle jeu #
     running = True
-    pygame.key.set_repeat()
+
+    #Vague d'ennemis#
+    vague = 0
+
+    last_seconde = pygame.time.get_ticks()
+    delai = 1000
+    count = 0
+
     while running :
         #appliquer arrière plan et défilement#
         y_background += 1/2
@@ -632,6 +646,10 @@ def jeu():
         prec_score = pygame.transform.scale(prec_score,(20,20))
         Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
+
+        #Affichage du score #
+        Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, color )
+        Vague_RECT = Vague_TEXT.get_rect(topleft=(300, 580))
         
         if game.player.score > int(saveread("bestscore")):
             color="Red"
@@ -641,6 +659,7 @@ def jeu():
 
         screen.blit(prec_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
+        screen.blit(Vague_TEXT, Vague_RECT)
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
@@ -648,8 +667,14 @@ def jeu():
         for monster in game.all_monsters :
             monster.forward()
         game.player.update_health_bar(screen)
-        
 
+        now = pygame.time.get_ticks()
+        if count==5 :
+            print('terminé')
+        if (now - last_seconde > delai) and count<5 :
+            count +=1 
+            game.spawn_monster()
+            last_seconde = now
 
         # vérifier si le joueur souhaite bouger ou tirer#
         if game.pressed.get(pygame.K_SPACE):
@@ -698,7 +723,6 @@ def jeu():
 
                     for key in listkeys:
                         game.pressed[key] = False
-
                     paused()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
