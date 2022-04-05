@@ -150,7 +150,7 @@ class Monster(pygame.sprite.Sprite):
             soundObj.play()
             self.game.explosion_group.add(explosion)
             self.game.all_monsters.remove(self)
-            self.game.player.score += 200
+            self.game.player.score += 5
 
     def forward(self):
         self.rect.y += self.velocity
