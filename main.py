@@ -107,8 +107,8 @@ class Explosion(pygame.sprite.Sprite):
     def remove(self):
         self.monster.all_laser.remove(self)
     #classe mouvement du laser #
-    def move(self):
-        self.rect.y += self.velocity
+    def move(self, time):
+        self.rect.y += self.velocity * time
         from main import screen
         if self.rect.y >  screen.get_height():
             self.remove()
@@ -179,7 +179,7 @@ class Projectile(pygame.sprite.Sprite) :
         soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
         soundObj.set_volume(float(saveread("volume2")))
         soundObj.play()
-        self.velocity = 4.5
+        self.velocity = 450
         self.player = player
         self.image = pygame.image.load('assets/missiles/PlayProjectile.png')
         self.image = pygame.transform.scale(self.image, (20,20))
@@ -190,13 +190,13 @@ class Projectile(pygame.sprite.Sprite) :
     def remove(self):
         self.player.all_projectiles.remove(self)
 
-    def move(self):
+    def move(self,time):
         for monster in self.player.game.check_collision(self, self.player.game.all_monsters) :
             self.remove()
             monster.damage(self.player.attack)
         if self.rect.y < -10 :
             self.remove()
-        self.rect.y -= self.velocity
+        self.rect.y -= self.velocity * time
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -205,7 +205,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.attack = 15
-        self.velocity = 3.5
+        self.velocity = 440
         self.score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -242,20 +242,20 @@ class Player(pygame.sprite.Sprite):
     def ShootUp(self, x) :
         self.shoot_delay -= x
 
-    def move_right(self):
-        self.rect.x += self.velocity
+    def move_right(self, time):
+        self.rect.x += self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/right.png')
         self.image = pygame.transform.scale(self.image, (80, 80))
-    def move_left(self):
-        self.rect.x -= self.velocity
+    def move_left(self, time):
+        self.rect.x -= self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/left.png')
         self.image = pygame.transform.scale(self.image, (80,80))
-    def move_up(self):
-        self.rect.y -= self.velocity
+    def move_up(self, time):
+        self.rect.y -= self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
-    def move_down(self):
-        self.rect.y += self.velocity
+    def move_down(self, time):
+        self.rect.y += self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
     def no_move(self):
@@ -644,7 +644,8 @@ def jeu():
     while running :
         #appliquer arrière plan et défilement#
 
-        clock.tick(120)
+        dt = clock.tick(120)
+        time = dt/1000
         print(clock.get_fps())
         if freeze != 1:
             y_background += 0.25
@@ -700,7 +701,7 @@ def jeu():
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
-            projectile.move()
+            projectile.move(time)
 
         game.player.update_health_bar(screen)
 
@@ -731,13 +732,13 @@ def jeu():
         if game.pressed.get(pygame.K_SPACE):
             game.player.launch_projectile()
         if (game.pressed.get(pygame.K_DOWN) or game.pressed.get(pygame.K_s)) and game.player.rect.y + (game.player.rect.height) < screen.get_height():
-            game.player.move_down()
+            game.player.move_down(time)
         if (game.pressed.get(pygame.K_UP) or game.pressed.get(pygame.K_z)) and game.player.rect.y > 0:
-            game.player.move_up()
+            game.player.move_up(time)
         if (game.pressed.get(pygame.K_RIGHT) or game.pressed.get(pygame.K_d)):
-            game.player.move_right()
+            game.player.move_right(time)
         if (game.pressed.get(pygame.K_LEFT) or game.pressed.get(pygame.K_q)):
-            game.player.move_left()
+            game.player.move_left(time)
         if not((game.pressed.get(pygame.K_DOWN) or game.pressed.get(pygame.K_s)) or  
             (game.pressed.get(pygame.K_UP) or game.pressed.get(pygame.K_z)) or 
             (game.pressed.get(pygame.K_RIGHT) or game.pressed.get(pygame.K_d)) or  
