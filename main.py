@@ -1,3 +1,5 @@
+from asyncio.format_helpers import _format_args_and_kwargs
+from turtle import delay, forward
 import pygame
 from pygame import mixer
 from random import randint
@@ -101,17 +103,6 @@ class Explosion(pygame.sprite.Sprite):
         if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
             self.kill()
 
-class Laser_ennemie(pygame.sprite.Sprite) :
-    # Définir le constructeur de cette classe #
-    def __init__(self, monster):
-        super().__init__()
-        self.velocity = 3.5
-        self.monster = monster
-        self.image = pygame.image.load('assets/missiles/ennemie.png')
-        self.image = pygame.transform.scale(self.image, (80,80))
-        self.rect = self.image.get_rect()
-        self.rect.x = monster.rect.x + (monster.rect.width)/2 - self.image.get_width()/2
-        self.rect.y = monster.rect.y
 
     def remove(self):
         self.monster.all_laser.remove(self)
@@ -123,6 +114,7 @@ class Laser_ennemie(pygame.sprite.Sprite) :
             self.remove()
 
 #Classe du monstre#s
+
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
         global soundObj 
@@ -133,7 +125,7 @@ class Monster(pygame.sprite.Sprite):
         self.health = 30
         self.max_health = 30
         self.attack = 10
-        self.velocity = 1.5
+        self.velocity = 1
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load("assets/vaisseaux/ennemies/enemy-01/nomove_1.png")
         self.image = pygame.transform.scale(self.image, (60,60))
@@ -161,11 +153,18 @@ class Monster(pygame.sprite.Sprite):
             self.game.all_monsters.remove(self)
             self.game.player.damage(self.attack)
 
-    def launch_laser(self) :
-        self.all_laser.add(Laser_ennemie(self))
 
     def velocityUp(self, x) :
         self.velocity += x
+
+    def freeze(self):
+        self.rect.y += 0
+        if self.game.check_collision(self,self.game.all_players) :
+            self.game.player.damage(self.attack)
+            self.game.all_monsters.remove(self)
+        if self.rect.y > 590 :
+            self.game.all_monsters.remove(self)
+            self.game.player.damage(self.attack)
 
     def HealthUp(self, x) :
         self.health += x
@@ -180,7 +179,7 @@ class Projectile(pygame.sprite.Sprite) :
         soundObj = pygame.mixer.Sound('sounds/player_shoot.wav')
         soundObj.set_volume(float(saveread("volume2")))
         soundObj.play()
-        self.velocity = 9
+        self.velocity = 4.5
         self.player = player
         self.image = pygame.image.load('assets/missiles/PlayProjectile.png')
         self.image = pygame.transform.scale(self.image, (20,20))
@@ -206,7 +205,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.attack = 15
-        self.velocity = 7
+        self.velocity = 3.5
         self.score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -216,6 +215,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = 500
         self.shoot_delay = 250
         self.last_shoot =  pygame.time.get_ticks()
+        self.clock = pygame.time.get_ticks()
 
     def damage(self, amount) :
         self.health -= amount
@@ -310,6 +310,8 @@ pygame.display.set_icon(icon)
 #Background des boutons#
 buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
+flake = pygame.image.load("assets/icon/flake.png")
+flake = pygame.transform.scale(flake,(50,50))
 screen = pygame.display.set_mode((400, 600))
 
 #Déclaration des variables de son#
@@ -456,6 +458,7 @@ def warning() :
             button.update(screen)
         
         pygame.display.update() 
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -632,10 +635,19 @@ def jeu():
     last_seconde = pygame.time.get_ticks()
     delai = 1000
     count = 0
+    freeze = 0
+    last_seconde2 = pygame.time.get_ticks()
+
+
+    freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
     while running :
         #appliquer arrière plan et défilement#
-        y_background += 1/2
+
+        clock.tick(120)
+        print(clock.get_fps())
+        if freeze != 1:
+            y_background += 0.25
         if y_background < 600 :
             screen.blit(background,(0,y_background))
             screen.blit(background, (0, y_background-600))
@@ -645,8 +657,13 @@ def jeu():
 
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-        clock.tick(70)
-        
+
+        MOUSE_POS = pygame.mouse.get_pos()
+
+        for button in [freeze_BUTTON]:
+            button.changeColor(MOUSE_POS)
+            button.update(screen)
+
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
         game.player.all_projectiles.draw(screen)
@@ -658,7 +675,6 @@ def jeu():
             soundObj.set_volume(volume)
             soundObj.play()
             pygame.mixer.music.stop()
-            save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
 
         #Affichage du score #
@@ -669,6 +685,7 @@ def jeu():
         #Affichage du score #
         Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, color )
         Vague_RECT = Vague_TEXT.get_rect(bottomright=(380, 590))
+
         
         if game.player.score > int(saveread("bestscore")):
             color="Red"
@@ -679,12 +696,12 @@ def jeu():
         screen.blit(prec_score,(20,15))
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
+        
 
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
             projectile.move()
-        for monster in game.all_monsters :
-            monster.forward()
+
         game.player.update_health_bar(screen)
 
         #################################################################################
@@ -701,12 +718,12 @@ def jeu():
             VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, color )
             VagueFinish_RECT = VagueFinish_TEXT.get_rect(center=(200,300 ))
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
-            if now - last_seconde > 10000:
+            if now - last_seconde > 15000:
                 count = 0
                 last_seconde = now
                 vague +=1
-                game.SpawnUp(30)
-        
+                game.SpawnUp(300)
+
         #################################################################################
 
 
@@ -730,6 +747,14 @@ def jeu():
             game.player.rect.x = 0 - game.player.rect.width 
         if (game.player.rect.x) < -(game.player.rect.width) :
             game.player.rect.x = screen.get_width()
+
+
+        for monster in game.all_monsters :
+            if freeze == 0:
+                monster.forward()
+            else:
+                monster.freeze()
+
 
         #mettre à jour l'écran  #
         pygame.display.flip()
@@ -760,5 +785,18 @@ def jeu():
                     paused()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if freeze_BUTTON.checkForInput(MOUSE_POS):
+                    freeze = 1
+                    last_seconde2 = pygame.time.get_ticks()
+
+            now2 = pygame.time.get_ticks()
+            if now2 - last_seconde2 >= 5000:
+                freeze = 0
+            
+            
+
+
 
 main_menu()
