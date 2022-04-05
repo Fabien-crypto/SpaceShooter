@@ -150,7 +150,7 @@ class Monster(pygame.sprite.Sprite):
             soundObj.play()
             self.game.explosion_group.add(explosion)
             self.game.all_monsters.remove(self)
-            self.game.player.score += 5
+            self.game.player.score += 200
 
     def forward(self):
         self.rect.y += self.velocity
@@ -645,7 +645,7 @@ def jeu():
 
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-        clock.tick(60)
+        clock.tick(70)
         
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
@@ -658,6 +658,7 @@ def jeu():
             soundObj.set_volume(volume)
             soundObj.play()
             pygame.mixer.music.stop()
+            save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
 
         #Affichage du score #
@@ -700,11 +701,11 @@ def jeu():
             VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, color )
             VagueFinish_RECT = VagueFinish_TEXT.get_rect(center=(200,300 ))
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
-            if now - last_seconde > 15000:
+            if now - last_seconde > 10000:
                 count = 0
                 last_seconde = now
                 vague +=1
-                game.SpawnUp(300)
+                game.SpawnUp(30)
         
         #################################################################################
 
