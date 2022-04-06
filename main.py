@@ -1,6 +1,3 @@
-from asyncio.format_helpers import _format_args_and_kwargs
-from turtle import delay, forward
-from matplotlib.pyplot import pause
 import pygame
 from pygame import mixer
 from random import randint
@@ -684,6 +681,7 @@ def jeu():
             soundObj.set_volume(volume)
             soundObj.play()
             pygame.mixer.music.stop()
+            save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
 
         #Affichage du score #
