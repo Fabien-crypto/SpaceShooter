@@ -5,7 +5,7 @@ from pygame import mixer
 from random import randint
 import sys
 from PIL import Image, ImageFilter
-from pygame.math import Vector2
+
 
 #Fonctions pour la sauvegarde#
 
@@ -107,8 +107,8 @@ class Explosion(pygame.sprite.Sprite):
     def remove(self):
         self.monster.all_laser.remove(self)
     #classe mouvement du laser #
-    def move(self, time):
-        self.rect.y += self.velocity * time
+    def move(self):
+        self.rect.y += self.velocity
         from main import screen
         if self.rect.y >  screen.get_height():
             self.remove()
@@ -117,7 +117,7 @@ class Explosion(pygame.sprite.Sprite):
 
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
-        global soundObj
+        global soundObj 
         super().__init__()
         self.game = game
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
@@ -125,15 +125,15 @@ class Monster(pygame.sprite.Sprite):
         self.health = 30
         self.max_health = 30
         self.attack = 10
+        self.velocity = 1
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load("assets/vaisseaux/ennemies/enemy-01/nomove_1.png")
         self.image = pygame.transform.scale(self.image, (60,60))
         self.rect = self.image.get_rect()
+        self.rect.x = randint(-15,360)
+        self.rect.y = -10
         self.delay = 90
         self.delay_spawn = 1000
-        self.pos = Vector2(randint(-15,360),-10)
-        self.velocity2 = Vector2(0,125)
-        self.pause = 1
  
     def damage(self, amount) :
         self.health -= amount
@@ -144,16 +144,14 @@ class Monster(pygame.sprite.Sprite):
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
 
-    def forward(self,time):
-        if self.pause == 1 : 
-            self.pos += self.velocity2 * time
-            self.rect.center = self.pos
-            if self.game.check_collision(self,self.game.all_players) :
-                self.game.player.damage(self.attack)
-                self.game.all_monsters.remove(self)
-            if self.rect.y > 590 :
-                self.game.all_monsters.remove(self)
-                self.game.player.damage(self.attack)
+    def forward(self):
+        self.rect.y += self.velocity
+        if self.game.check_collision(self,self.game.all_players) :
+            self.game.player.damage(self.attack)
+            self.game.all_monsters.remove(self)
+        if self.rect.y > 590 :
+            self.game.all_monsters.remove(self)
+            self.game.player.damage(self.attack)
 
 
     def velocityUp(self, x) :
@@ -192,13 +190,13 @@ class Projectile(pygame.sprite.Sprite) :
     def remove(self):
         self.player.all_projectiles.remove(self)
 
-    def move(self,time):
+    def move(self, time):
         for monster in self.player.game.check_collision(self, self.player.game.all_monsters) :
             self.remove()
             monster.damage(self.player.attack)
         if self.rect.y < -10 :
             self.remove()
-        self.rect.y -= self.velocity * time
+        self.rect.y -= self.velocity * time 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game):
@@ -207,7 +205,7 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.max_health = 100
         self.attack = 15
-        self.velocity = 440
+        self.velocity = 400
         self.score = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
@@ -244,7 +242,7 @@ class Player(pygame.sprite.Sprite):
     def ShootUp(self, x) :
         self.shoot_delay -= x
 
-    def move_right(self, time):
+    def move_right(self,time):
         self.rect.x += self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/right.png')
         self.image = pygame.transform.scale(self.image, (80, 80))
@@ -256,7 +254,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y -= self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
-    def move_down(self, time):
+    def move_down(self , time):
         self.rect.y += self.velocity * time
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
@@ -295,7 +293,7 @@ class Game:
 #Initialisation du jeu#
 pygame.init()
 pygame.font.init()
-game = Game()
+pygame.init()
 
 # Nom de la fenêtre #
 pygame.display.set_caption("SpaceShoot")
@@ -478,7 +476,6 @@ def warning() :
 
 
 def paused() :
-    game.monster.pause = 0
     while True:
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
@@ -624,6 +621,7 @@ def jeu():
     background = pygame.transform.scale(background,(400,600))
     y_background = 0
     #Chargement de notre jeu#
+    game = Game()
 
     #Chargement image pour score et bestscore#
     prec_score = pygame.image.load('assets/icon/prec_score.png')
@@ -633,11 +631,11 @@ def jeu():
 
     #Vague d'ennemis#
     vague = 1
+
     last_seconde = pygame.time.get_ticks()
     delai = 1000
     count = 0
     freeze = 0
-    pause = 0
     last_seconde2 = pygame.time.get_ticks()
 
 
@@ -648,7 +646,7 @@ def jeu():
 
         dt = clock.tick(120)
         time = dt/1000
-        print(dt)
+
         if freeze != 1:
             y_background += 0.25
         if y_background < 600 :
@@ -678,6 +676,7 @@ def jeu():
             soundObj.set_volume(volume)
             soundObj.play()
             pygame.mixer.music.stop()
+            save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
 
         #Affichage du score #
@@ -721,11 +720,11 @@ def jeu():
             VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, color )
             VagueFinish_RECT = VagueFinish_TEXT.get_rect(center=(200,300 ))
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
-            if now - last_seconde > 15000:
+            if now - last_seconde > 10000:
                 count = 0
                 last_seconde = now
                 vague +=1
-                game.SpawnUp(300)
+                game.SpawnUp(100)
 
         #################################################################################
 
@@ -753,8 +752,8 @@ def jeu():
 
 
         for monster in game.all_monsters :
-            if freeze == 0 or pause == 0:
-                monster.forward(time)
+            if freeze == 0:
+                monster.forward()
             else:
                 monster.freeze()
 
@@ -785,7 +784,6 @@ def jeu():
 
                     for key in listkeys:
                         game.pressed[key] = False
-                    pause = 1
                     paused()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
@@ -798,8 +796,7 @@ def jeu():
             now2 = pygame.time.get_ticks()
             if now2 - last_seconde2 >= 5000:
                 freeze = 0
-
-
+            
             
 
 
