@@ -802,7 +802,7 @@ def jeu():
             #          last_seconde2 = pygame.time.get_ticks()
 
             now2 = pygame.time.get_ticks()
-            if now2 - last_seconde2 >= 5:
+            if now2 - last_seconde2 >= 1:
                  pause = 0
 
             
