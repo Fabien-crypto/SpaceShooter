@@ -159,12 +159,6 @@ class Monster(pygame.sprite.Sprite):
 
     def freeze(self):
         self.rect.center = self.pos
-        if self.game.check_collision(self,self.game.all_players) :
-            self.game.player.damage(self.attack)
-            self.game.all_monsters.remove(self)
-        if self.rect.y > 590 :
-            self.game.all_monsters.remove(self)
-            self.game.player.damage(self.attack)
 
     def HealthUp(self, x) :
         self.health += x
@@ -269,7 +263,6 @@ class Coin(pygame.sprite.Sprite):
         super().__init__()
         global soundObj 
         self.value = 10
-        self.velocity = 1
         self.player = player
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
         soundObj.set_volume(float(saveread("volume2")))
@@ -282,6 +275,7 @@ class Coin(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+        self.pos = Vector2(x,y)
         self.counter = 0
 
     def update(self):
@@ -300,12 +294,15 @@ class Coin(pygame.sprite.Sprite):
     def remove(self):
         self.player.game.all_coin.remove(self)
 
-    def forward(self):
+    def forward(self, time):
         if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
             self.remove()
         else :
-            self.rect.y += self.velocity
+            self.pos += self.player.game.monster.velocity * time
+            self.rect.center = self.pos
 
+    def freeze(self):
+        self.rect.center = self.pos
 
 class Game:
     def __init__(self):
@@ -727,7 +724,11 @@ def jeu():
         game.all_coin.draw(screen)
 
         for coin in game.all_coin :
-            coin.forward()
+            if pause == 0:
+                coin.forward(time)
+            else:
+                coin.freeze()
+
 
 
         if game.player.health <= 0:
