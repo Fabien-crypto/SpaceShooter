@@ -130,7 +130,7 @@ class Monster(pygame.sprite.Sprite):
         self.delay = 90
         self.delay_spawn = 1000
         self.pos = Vector2(randint(-15,360),-10)
-        self.velocity = Vector2(0,110)
+        self.velocity = Vector2(0,90)
  
     def damage(self, amount) :
         self.health -= amount
@@ -673,7 +673,7 @@ def jeu():
 
     #Chargement image pour score et bestscore#
     prec_score = pygame.image.load('assets/icon/prec_score.png')
-    
+    money = pygame.image.load('assets/coin/coin_01.png')
     # Boucle jeu #
     running = True
     k = 0
@@ -686,7 +686,6 @@ def jeu():
     count = 0
     pause = 0
     last_seconde2 = pygame.time.get_ticks()
-
 
     #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
@@ -741,8 +740,11 @@ def jeu():
 
         #Affichage du score #
         prec_score = pygame.transform.scale(prec_score,(20,20))
+        money = pygame.transform.scale(money,(20,20)) 
         Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
+        Money_TEXT = get_font(13).render((str(game.player.money)), True, color )
+        Money_RECT = Score_TEXT.get_rect(topleft=(60, 50))
 
         #Affichage du score #
         Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, color )
@@ -756,8 +758,10 @@ def jeu():
             screen.blit(Record_TEXT,Record_RECT)
 
         screen.blit(prec_score,(20,15))
+        screen.blit(money,(20,45))
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
+        screen.blit(Money_TEXT, Money_RECT)
         
 
         #récupérer tout les projectiles du joueur #
