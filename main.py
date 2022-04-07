@@ -296,6 +296,7 @@ class Coin(pygame.sprite.Sprite):
 
     def forward(self, time):
         if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
+            self.player.game.player.money += 1
             self.remove()
         else :
             self.pos += self.player.game.monster.velocity * time
