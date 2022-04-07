@@ -130,9 +130,9 @@ class Monster(pygame.sprite.Sprite):
         self.delay = 90
         self.delay_spawn = 1000
         self.pos = Vector2(randint(-15,360),-10)
-        self.velocity = Vector2(0,90)
+        self.velocity = 90
  
-    def damage(self, amount) :
+    def damage(self, amount) :            
         self.health -= amount
         if self.health <= 0:
             explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
@@ -143,8 +143,8 @@ class Monster(pygame.sprite.Sprite):
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
 
-    def forward(self, time):
-        self.pos += self.velocity * time
+    def forward(self, time, velocity):
+        self.pos += Vector2(0,velocity) * time
         self.rect.center = self.pos
         if self.game.check_collision(self,self.game.all_players) :
             self.game.player.damage(self.attack)
@@ -294,12 +294,12 @@ class Coin(pygame.sprite.Sprite):
     def remove(self):
         self.player.game.all_coin.remove(self)
 
-    def forward(self, time):
+    def forward(self, time, velocity):
         if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
             self.player.game.player.money += 1
             self.remove()
         else :
-            self.pos += self.player.game.monster.velocity * time
+            self.pos += Vector2(0,velocity) * time
             self.rect.center = self.pos
 
     def freeze(self):
@@ -677,7 +677,7 @@ def jeu():
     money = pygame.image.load('assets/coin/coin_01.png')
     # Boucle jeu #
     running = True
-    k = 0
+    velocity = game.monster.velocity
 
     #Vague d'ennemis#
     vague = 1
@@ -695,7 +695,6 @@ def jeu():
 
         dt = clock.tick(144)
         time = dt/1000
-        print(clock.get_fps())
 
         if pause != 1:
             y_background += 0.25
@@ -723,11 +722,7 @@ def jeu():
         game.all_coin.update()
         game.all_coin.draw(screen)
 
-        for coin in game.all_coin :
-            if pause == 0:
-                coin.forward(time)
-            else:
-                coin.freeze()
+
 
 
 
@@ -789,7 +784,9 @@ def jeu():
                 count = 0
                 last_seconde = now
                 vague +=1
-                game.SpawnUp(100)
+                velocity += 10
+                game.SpawnUp(20)
+                print(game.monster.velocity)
 
         #################################################################################
 
@@ -816,9 +813,16 @@ def jeu():
             game.player.rect.x = screen.get_width()
 
 
+        for coin in game.all_coin :
+            if pause == 0:
+                coin.forward(time, velocity)
+            else:
+                coin.freeze()
+
+
         for monster in game.all_monsters :
             if pause == 0:
-                monster.forward(time)
+                monster.forward(time,velocity)
 
             else:
                 monster.freeze()
