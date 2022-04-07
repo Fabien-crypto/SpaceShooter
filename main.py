@@ -137,6 +137,8 @@ class Monster(pygame.sprite.Sprite):
         if self.health <= 0:
             explosion = Explosion(self.rect.centerx, self.rect.centery, 1)
             soundObj.play()
+            coin = Coin(self,self.rect.centerx, self.rect.centery, 1)
+            self.game.all_coin.add(coin)
             self.game.explosion_group.add(explosion)
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
@@ -205,6 +207,7 @@ class Player(pygame.sprite.Sprite):
         self.attack = 15
         self.velocity = 440
         self.score = 0
+        self.money = 0
         self.all_projectiles = pygame.sprite.Group()
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
@@ -260,6 +263,50 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
         self.image = pygame.transform.scale(self.image, (80,80))
 
+
+class Coin(pygame.sprite.Sprite):
+    def __init__(self,player, x, y, size):
+        super().__init__()
+        global soundObj 
+        self.value = 10
+        self.velocity = 1
+        self.player = player
+        soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
+        soundObj.set_volume(float(saveread("volume2")))
+        self.images = []
+        for num in range(1, 9):
+            img = pygame.image.load(f"assets/coin/coin_0{num}.png")
+            img = pygame.transform.scale(img,(25,25))
+            self.images.append(img)
+        self.index = 0
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.counter = 0
+
+    def update(self):
+        flip_speed = 10
+        #update explosion animation
+        self.counter += 1
+        if self.counter >= flip_speed and self.index < len(self.images) - 1:
+            self.counter = 0
+            self.index += 1
+            self.image = self.images[self.index]
+        if self.counter >= flip_speed and self.index >= len(self.images) -1:
+            self.counter = 0
+            self.index = 0
+            self.image = self.images[self.index]
+
+    def remove(self):
+        self.player.game.all_coin.remove(self)
+
+    def forward(self):
+        if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
+            self.remove()
+        else :
+            self.rect.y += self.velocity
+
+
 class Game:
     def __init__(self):
         #Génère notre joueur#
@@ -269,6 +316,7 @@ class Game:
         self.explosion_group = pygame.sprite.Group()
         self.all_monsters = pygame.sprite.Group()
         self.monster  = Monster(self)
+        self.all_coin = pygame.sprite.Group()
         self.pressed = {}
         self.delay_spawn = 1000
         self.last_monster = pygame.time.get_ticks()
@@ -675,6 +723,12 @@ def jeu():
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
         game.explosion_group.draw(screen)
+        game.all_coin.update()
+        game.all_coin.draw(screen)
+
+        for coin in game.all_coin :
+            coin.forward()
+
 
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
@@ -729,7 +783,7 @@ def jeu():
                 count = 0
                 last_seconde = now
                 vague +=1
-                game.SpawnUp(300)
+                game.SpawnUp(100)
 
         #################################################################################
 
