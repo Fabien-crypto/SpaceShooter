@@ -129,7 +129,7 @@ class Monster(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.delay = 90
         self.delay_spawn = 1000
-        self.pos = Vector2(randint(-15,360),-10)
+        self.pos = Vector2(randint(15,360),-10)
         self.velocity = 90
  
     def damage(self, amount) :            
@@ -786,7 +786,6 @@ def jeu():
                 vague +=1
                 velocity += 10
                 game.SpawnUp(20)
-                print(game.monster.velocity)
 
         #################################################################################
 
