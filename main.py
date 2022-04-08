@@ -828,7 +828,7 @@ def jeu():
 
 
         #mettre à jour l'écran  #
-        pygame.display.flip()
+        pygame.display.update()
         #fermeture du jeu#
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
