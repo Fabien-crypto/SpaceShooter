@@ -107,7 +107,6 @@ class Explosion(pygame.sprite.Sprite):
     #classe mouvement du laser #
     def move(self, time):
         self.rect.y += self.velocity * time
-        from main import screen
         if self.rect.y >  screen.get_height():
             self.remove()
 
@@ -340,7 +339,6 @@ class Game:
 #Initialisation du jeu#
 pygame.init()
 pygame.font.init()
-pygame.init()
 
 # Nom de la fenêtre #
 pygame.display.set_caption("SpaceShoot")
@@ -553,7 +551,6 @@ def paused() :
                 if QUIT_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                     mixer.music.unpause()
-                    color="White"
                     main_menu()
     
 
