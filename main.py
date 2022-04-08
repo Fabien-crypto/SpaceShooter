@@ -688,13 +688,16 @@ def jeu():
     pause = 0
     last_seconde2 = pygame.time.get_ticks()
 
+    bestscore = int(saveread("bestscore"))
+
     #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
     while running :
         #appliquer arrière plan et défilement#
 
-        dt = clock.tick(144)
+        dt = clock.tick(2000)
         time = dt/1000
+        print(clock.get_fps())
 
         if pause != 1:
             y_background += 0.25
@@ -747,7 +750,7 @@ def jeu():
         Vague_RECT = Vague_TEXT.get_rect(bottomright=(380, 590))
 
         
-        if game.player.score > int(saveread("bestscore")):
+        if game.player.score > bestscore:
             color="Red"
             Record_TEXT = get_font(8).render("Nouveau record !",True,"Red")
             Record_RECT = Record_TEXT.get_rect(topleft=(20, 45))
