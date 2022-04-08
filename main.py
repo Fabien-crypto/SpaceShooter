@@ -822,7 +822,6 @@ def jeu():
         for monster in game.all_monsters :
             if pause == 0:
                 monster.forward(time,velocity)
-
             else:
                 monster.freeze()
 
