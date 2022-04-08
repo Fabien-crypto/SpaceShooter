@@ -689,6 +689,9 @@ def jeu():
     last_seconde2 = pygame.time.get_ticks()
 
     bestscore = int(saveread("bestscore"))
+    prec_score = pygame.transform.scale(prec_score,(20,20))
+    money = pygame.transform.scale(money,(20,20)) 
+    
 
     #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
@@ -711,8 +714,6 @@ def jeu():
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
 
-        MOUSE_POS = pygame.mouse.get_pos()
-
         # for button in [freeze_BUTTON]:
         #     button.changeColor(MOUSE_POS)
         #     button.update(screen)
@@ -726,9 +727,6 @@ def jeu():
         game.all_coin.draw(screen)
 
 
-
-
-
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
             soundObj.set_volume(volume)
@@ -738,8 +736,6 @@ def jeu():
             over_menu()
 
         #Affichage du score #
-        prec_score = pygame.transform.scale(prec_score,(20,20))
-        money = pygame.transform.scale(money,(20,20)) 
         Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
         Money_TEXT = get_font(13).render((str(game.player.money)), True, color )
@@ -829,8 +825,7 @@ def jeu():
                 monster.freeze()
 
 
-        #mettre à jour l'écran  #
-        pygame.display.update()
+       
         #fermeture du jeu#
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
@@ -866,11 +861,12 @@ def jeu():
             #          pause = 1
             #          last_seconde2 = pygame.time.get_ticks()
 
-            now2 = pygame.time.get_ticks()
-            if now2 - last_seconde2 >= 1:
-                 pause = 0
+        now2 = pygame.time.get_ticks()
+        if now2 - last_seconde2 >= 1:
+            pause = 0
 
-            
+        #mettre à jour l'écran  #
+        pygame.display.update()
 
 
 
