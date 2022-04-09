@@ -312,6 +312,7 @@ class Game:
         self.explosion_group = pygame.sprite.Group()
         self.all_monsters = pygame.sprite.Group()
         self.monster  = Monster(self)
+        self.coin = Coin(self,1,1,1)
         self.all_coin = pygame.sprite.Group()
         self.pressed = {}
         self.delay_spawn = 1500
@@ -687,7 +688,7 @@ def jeu():
     color2 = "Red"
     color3 = "Red"
     color4 = "Red"
-
+    value = 1
     #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
     while running :
@@ -803,8 +804,6 @@ def jeu():
                 game.monster.max_health +=5
 
         #################################################################################
-
-
         # vérifier si le joueur souhaite bouger ou tirer#
         if game.pressed.get(pygame.K_SPACE):
             game.player.launch_projectile()
@@ -837,6 +836,8 @@ def jeu():
             else:
                 monster.freeze()
 
+        for coin in game.all_coin :
+            coin.value = value
         #fermeture du jeu#
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
@@ -856,9 +857,7 @@ def jeu():
                     blurImage.save('assets/menu/blurrybg.jpg')
                     BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
                     screen.blit(BG2, (0, 0))
-
                     listkeys = [pygame.K_DOWN,pygame.K_UP,pygame.K_RIGHT,pygame.K_SPACE,pygame.K_LEFT,pygame.K_s,pygame.K_z,pygame.K_q,pygame.K_d]
-
                     for key in listkeys:
                         game.pressed[key] = False
                     pause = 1
@@ -866,10 +865,10 @@ def jeu():
                     last_seconde2 = pygame.time.get_ticks()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN and count==15 and len(game.all_monsters)==0:
                     if POWER_SHOOT_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_power :
-                            game.player.attack += 15
+                            game.player.attack += 5
                             game.player.money -= cost_power
                             cost_power*=2
                     if LIFE_BUTTON.checkForInput(VAGUE_MOUSE_POS):
@@ -878,14 +877,13 @@ def jeu():
                             game.player.money -= cost_life
                             cost_life*=2
                     if SHOOT_DELAY_BUTTON.checkForInput(VAGUE_MOUSE_POS):
-                        if game.player.money >= cost_delay:
+                        if game.player.money >= cost_delay and game.player.shoot_delay >=100:
                             game.player.shoot_delay -= 10
                             game.player.money -= cost_delay
                             cost_delay*=2
                     if EARNING_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_earning :
-                            for coin in game.all_coin :
-                                coin.value += 2
+                            value +=1
                             game.player.money -= cost_earning
                             cost_earning*=2
 
@@ -895,7 +893,5 @@ def jeu():
 
         #mettre à jour l'écran  #
         pygame.display.update()
-
-
 
 main_menu()
