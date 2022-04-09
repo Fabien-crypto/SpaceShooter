@@ -733,7 +733,7 @@ def jeu():
         Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
         Money_TEXT = get_font(13).render((str(game.player.money)), True, "White" )
-        Money_RECT = Score_TEXT.get_rect(topleft=(60, 70))
+        Money_RECT = Score_TEXT.get_rect(topleft=(60, 50))
 
         #Affichage du score #
         Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, "White" )
@@ -741,12 +741,9 @@ def jeu():
         
         if game.player.score > bestscore:
             color="Red"
-            Record_TEXT = get_font(8).render("Nouveau record !",True,"Red")
-            Record_RECT = Record_TEXT.get_rect(topleft=(20, 45))
-            screen.blit(Record_TEXT,Record_RECT)
 
         screen.blit(prec_score,(20,15))
-        screen.blit(money,(20,65))
+        screen.blit(money,(20,45))
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
         screen.blit(Money_TEXT, Money_RECT)
