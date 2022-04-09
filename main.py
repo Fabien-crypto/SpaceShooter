@@ -39,34 +39,34 @@ def save(score,vol,pos,vol2,pos2):
 
 
 class Button():
-	def __init__(self, image, pos, text_input, font, base_color, hovering_color):
-		self.image = image
-		self.x_pos = pos[0]
-		self.y_pos = pos[1]
-		self.font = font
-		self.base_color, self.hovering_color = base_color, hovering_color
-		self.text_input = text_input
-		self.text = self.font.render(self.text_input, True, self.base_color)
-		if self.image is None:
-			self.image = self.text
-		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
-		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+        self.image = image
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.font = font
+        self.base_color, self.hovering_color = base_color, hovering_color
+        self.text_input = text_input
+        self.text = self.font.render(self.text_input, True, self.base_color)
+        if self.image is None:
+            self.image = self.text
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
-	def update(self, screen):
-		if self.image is not None:
-			screen.blit(self.image, self.rect)
-		screen.blit(self.text, self.text_rect)
+    def update(self, screen):
+        if self.image is not None:
+            screen.blit(self.image, self.rect)
+        screen.blit(self.text, self.text_rect)
 
-	def checkForInput(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			return True
-		return False
+    def checkForInput(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+        return False
 
-	def changeColor(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			self.text = self.font.render(self.text_input, True, self.hovering_color)
-		else:
-			self.text = self.font.render(self.text_input, True, self.base_color)
+    def changeColor(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, size):
@@ -127,7 +127,6 @@ class Monster(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (60,60))
         self.rect = self.image.get_rect()
         self.delay = 90
-        self.delay_spawn = 1000
         self.pos = Vector2(randint(15,360),-10)
         self.velocity = 90
  
@@ -261,7 +260,7 @@ class Coin(pygame.sprite.Sprite):
     def __init__(self,player, x, y, size):
         super().__init__()
         global soundObj 
-        self.value = 10
+        self.value = 1
         self.player = player
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
         soundObj.set_volume(float(saveread("volume2")))
@@ -295,7 +294,7 @@ class Coin(pygame.sprite.Sprite):
 
     def forward(self, time, velocity):
         if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
-            self.player.game.player.money += 1
+            self.player.game.player.money += self.value
             self.remove()
         else :
             self.pos += Vector2(0,velocity) * time
@@ -315,7 +314,7 @@ class Game:
         self.monster  = Monster(self)
         self.all_coin = pygame.sprite.Group()
         self.pressed = {}
-        self.delay_spawn = 1000
+        self.delay_spawn = 1500
         self.last_monster = pygame.time.get_ticks()
 
     def check_collision(self, sprite, group) :
@@ -518,8 +517,6 @@ def warning() :
                 if YES_BUTTON.checkForInput(OPTIONS_MOUSE_POS):
                     return 1
 
-
-
 def paused() :
     global pause
     pause = 1
@@ -552,9 +549,6 @@ def paused() :
                     save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                     mixer.music.unpause()
                     main_menu()
-    
-
-
     
 
 def over_menu():
@@ -631,10 +625,10 @@ def main_menu():
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_RETURN:
                     jeu()
-            if event.type == pygame.QUIT:
+            elif event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     jeu()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -644,8 +638,6 @@ def main_menu():
                     sys.exit()
             
         pygame.display.update()
-
-
 
 
 def jeu():
@@ -683,12 +675,18 @@ def jeu():
     delai = 1000
     count = 0
     pause = 0
+    cost_power=1
+    cost_life=1
+    cost_delay=1
+    cost_earning=1
     last_seconde2 = pygame.time.get_ticks()
-
     bestscore = int(saveread("bestscore"))
     prec_score = pygame.transform.scale(prec_score,(20,20))
     money = pygame.transform.scale(money,(20,20)) 
-    
+    color1 = "Red"
+    color2 = "Red"
+    color3 = "Red"
+    color4 = "Red"
 
     #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
@@ -723,7 +721,6 @@ def jeu():
         game.all_coin.update()
         game.all_coin.draw(screen)
 
-
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
             soundObj.set_volume(volume)
@@ -731,17 +728,15 @@ def jeu():
             pygame.mixer.music.stop()
             save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
-
         #Affichage du score #
         Score_TEXT = get_font(13).render((str(game.player.score)), True, color )
         Score_RECT = Score_TEXT.get_rect(topleft=(60, 18))
-        Money_TEXT = get_font(13).render((str(game.player.money)), True, color )
-        Money_RECT = Score_TEXT.get_rect(topleft=(60, 50))
+        Money_TEXT = get_font(13).render((str(game.player.money)), True, "White" )
+        Money_RECT = Score_TEXT.get_rect(topleft=(60, 70))
 
         #Affichage du score #
-        Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, color )
+        Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, "White" )
         Vague_RECT = Vague_TEXT.get_rect(bottomright=(380, 590))
-
         
         if game.player.score > bestscore:
             color="Red"
@@ -750,38 +745,62 @@ def jeu():
             screen.blit(Record_TEXT,Record_RECT)
 
         screen.blit(prec_score,(20,15))
-        screen.blit(money,(20,45))
+        screen.blit(money,(20,65))
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
         screen.blit(Money_TEXT, Money_RECT)
         
-
         #récupérer tout les projectiles du joueur #
         for projectile in game.player.all_projectiles :
             projectile.move(time)
 
         game.player.update_health_bar(screen)
-
         #################################################################################
         ################################# VAGUE ENNEMIS #################################
         #################################################################################
         now = pygame.time.get_ticks()
-
         if (now - last_seconde > delai) and count<15 :
             count +=1 
             last_seconde = now
-        if count<15 and pause == 0:
+        elif count<15 and pause == 0:
             game.spawn_monster()
-        if count==15 and len(game.all_monsters)==0:
-            VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, color )
+        elif count==15 and len(game.all_monsters)==0:
+            VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, "White" )
             VagueFinish_RECT = VagueFinish_TEXT.get_rect(center=(200,300 ))
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
+            VAGUE_MOUSE_POS=pygame.mouse.get_pos()
+            POWER_SHOOT_BUTTON = Button(image=buttonimg, pos=(120, 400), text_input="Power Shoot", font=get_font(8), base_color="White", hovering_color=color1)
+            LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upgrade life", font=get_font(8), base_color="White", hovering_color=color2)
+            SHOOT_DELAY_BUTTON = Button(image=buttonimg, pos=(120, 490), text_input="Shoot delay", font=get_font(8), base_color="White", hovering_color=color3)
+            EARNING_BUTTON = Button(image=buttonimg, pos=(290, 490), text_input="Money Value", font=get_font(8), base_color="White", hovering_color=color4)
+            if game.player.money >= cost_power :
+                color1="Green"
+            if game.player.money < cost_power :
+                color1="Red"
+            if game.player.money >= cost_life :
+                color2="Green"
+            if (game.player.money < cost_life) or ((game.player.health+15) >= game.player.max_health)  :
+                color2 = "Red"
+            if game.player.money >= cost_delay :
+                color3="Green"
+            if game.player.money < cost_delay :
+                color3 = "Red"   
+            if game.player.money >= cost_earning :
+                color4="Green"
+            if game.player.money < cost_earning:
+                color4 = "Red"
+            for button in [POWER_SHOOT_BUTTON,LIFE_BUTTON,SHOOT_DELAY_BUTTON,EARNING_BUTTON]:
+                button.changeColor(VAGUE_MOUSE_POS)
+                button.update(screen)        
             if now - last_seconde > 15000:
                 count = 0
                 last_seconde = now
                 vague +=1
                 velocity += 10
                 game.SpawnUp(20)
+                game.monster.attack += 2
+                game.monster.health += 5
+                game.monster.max_health +=5
 
         #################################################################################
 
@@ -804,25 +823,20 @@ def jeu():
             game.player.no_move()
         if (game.player.rect.x) > screen.get_width():
             game.player.rect.x = 0 - game.player.rect.width 
-        if (game.player.rect.x) < -(game.player.rect.width) :
+        elif (game.player.rect.x) < -(game.player.rect.width) :
             game.player.rect.x = screen.get_width()
-
 
         for coin in game.all_coin :
             if pause == 0:
                 coin.forward(time, velocity)
             else:
                 coin.freeze()
-
-
         for monster in game.all_monsters :
             if pause == 0:
                 monster.forward(time,velocity)
             else:
                 monster.freeze()
 
-
-       
         #fermeture du jeu#
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
@@ -831,7 +845,7 @@ def jeu():
                 save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN :
+            elif event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.pause()
@@ -852,11 +866,28 @@ def jeu():
                     last_seconde2 = pygame.time.get_ticks()
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
-            
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #      if freeze_BUTTON.checkForInput(MOUSE_POS):
-            #          pause = 1
-            #          last_seconde2 = pygame.time.get_ticks()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    if POWER_SHOOT_BUTTON.checkForInput(VAGUE_MOUSE_POS):
+                        if game.player.money >= cost_power :
+                            game.player.attack += 15
+                            game.player.money -= cost_power
+                            cost_power*=2
+                    if LIFE_BUTTON.checkForInput(VAGUE_MOUSE_POS):
+                        if game.player.money >= cost_life and (game.player.health+15) <= game.player.max_health:
+                            game.player.health += 15
+                            game.player.money -= cost_life
+                            cost_life*=2
+                    if SHOOT_DELAY_BUTTON.checkForInput(VAGUE_MOUSE_POS):
+                        if game.player.money >= cost_delay:
+                            game.player.shoot_delay -= 10
+                            game.player.money -= cost_delay
+                            cost_delay*=2
+                    if EARNING_BUTTON.checkForInput(VAGUE_MOUSE_POS):
+                        if game.player.money >= cost_earning :
+                            for coin in game.all_coin :
+                                coin.value += 2
+                            game.player.money -= cost_earning
+                            cost_earning*=2
 
         now2 = pygame.time.get_ticks()
         if now2 - last_seconde2 >= 1:
