@@ -259,11 +259,11 @@ class Player(pygame.sprite.Sprite):
 class Coin(pygame.sprite.Sprite):
     def __init__(self,player, x, y, size):
         super().__init__()
-        global soundObj 
+        global sound_coin
         self.value = 1
         self.player = player
-        soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
-        soundObj.set_volume(float(saveread("volume2")))
+        sound_coin = pygame.mixer.Sound('sounds/coin.wav')
+        sound_coin.set_volume(float(saveread("volume2")))
         self.images = []
         for num in range(1, 9):
             img = pygame.image.load(f"assets/coin/coin_0{num}.png")
@@ -295,6 +295,7 @@ class Coin(pygame.sprite.Sprite):
     def forward(self, time, velocity):
         if pygame.sprite.spritecollide(self, self.player.game.all_players, False, pygame.sprite.collide_mask) :
             self.player.game.player.money += self.value
+            sound_coin.play()
             self.remove()
         else :
             self.pos += Vector2(0,velocity) * time
@@ -355,8 +356,6 @@ pygame.display.set_icon(icon)
 #Background des boutons#
 buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
-flake = pygame.image.load("assets/icon/flake.png")
-flake = pygame.transform.scale(flake,(50,50))
 screen = pygame.display.set_mode((400, 600))
 
 #Déclaration des variables de son#
@@ -591,7 +590,7 @@ def over_menu():
 def main_menu():
     mixer.music.load('sounds/01_Title-Screen.wav')
     mixer.music.set_volume(volume)
-    mixer.music.play()
+    mixer.music.play(-1, 0.0, 0)
     while True:
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
@@ -647,7 +646,7 @@ def jeu():
     color="White"
     #Musique de fond#    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
-    mixer.music.play()
+    mixer.music.play(-1, 0.0, 0)
 
     #Temps du jeu #
     clock = pygame.time.Clock()
@@ -689,7 +688,6 @@ def jeu():
     color3 = "Red"
     color4 = "Red"
     value = 1
-    #freeze_BUTTON = Button(image=flake, pos=(50, 560), text_input="      ", font=get_font(12), base_color="White", hovering_color="Green")
 
     while running :
         #appliquer arrière plan et défilement#
@@ -725,7 +723,7 @@ def jeu():
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
             soundObj.set_volume(volume)
-            soundObj.play()
+            soundObj.play(-1, 0.0, 0)
             pygame.mixer.music.stop()
             save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
@@ -771,6 +769,25 @@ def jeu():
             LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upgrade life", font=get_font(8), base_color="White", hovering_color=color2)
             SHOOT_DELAY_BUTTON = Button(image=buttonimg, pos=(120, 490), text_input="Shoot delay", font=get_font(8), base_color="White", hovering_color=color3)
             EARNING_BUTTON = Button(image=buttonimg, pos=(290, 490), text_input="Money Value", font=get_font(8), base_color="White", hovering_color=color4)
+            screen.blit(money,(50,430))
+            screen.blit(money,(50,520))
+            screen.blit(money,(220,430))
+            screen.blit(money,(220,520))
+            COUT_POWER_TEXT = get_font(10).render(("Cout: "+str(cost_power)), True, color1 )
+            COUT_POWER_RECT = COUT_POWER_TEXT.get_rect(center=(110,440 ))
+            COUT_LIFE_TEXT = get_font(10).render(("Cout: "+str(cost_life)), True, color2 )
+            COUT_LIFE_RECT = COUT_LIFE_TEXT.get_rect(center=(280,440 ))
+            COUT_DELAY_TEXT = get_font(10).render(("Cout: "+str(cost_delay)), True, color3 )
+            COUT_DELAY_RECT = COUT_DELAY_TEXT.get_rect(center=(110,530 ))
+            COUT_EARNING_TEXT = get_font(10).render(("Cout: "+str(cost_earning)), True, color4 )
+            COUT_EARNING_RECT = COUT_EARNING_TEXT.get_rect(center=(280,530 ))
+            screen.blit(COUT_POWER_TEXT, COUT_POWER_RECT)
+            screen.blit(COUT_LIFE_TEXT, COUT_LIFE_RECT)
+            screen.blit(COUT_DELAY_TEXT, COUT_DELAY_RECT)
+            screen.blit(COUT_EARNING_TEXT, COUT_EARNING_RECT)
+            for button in [POWER_SHOOT_BUTTON,LIFE_BUTTON,SHOOT_DELAY_BUTTON,EARNING_BUTTON]:
+                button.changeColor(VAGUE_MOUSE_POS)
+                button.update(screen)   
             if game.player.money >= cost_power :
                 color1="Green"
             if game.player.money < cost_power :
@@ -786,10 +803,7 @@ def jeu():
             if game.player.money >= cost_earning :
                 color4="Green"
             if game.player.money < cost_earning:
-                color4 = "Red"
-            for button in [POWER_SHOOT_BUTTON,LIFE_BUTTON,SHOOT_DELAY_BUTTON,EARNING_BUTTON]:
-                button.changeColor(VAGUE_MOUSE_POS)
-                button.update(screen)        
+                color4 = "Red"   
             if now - last_seconde > 15000:
                 count = 0
                 last_seconde = now
