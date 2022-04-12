@@ -71,16 +71,18 @@ def save(score,vol,pos,vol2,pos2):
 
 
 def session():
+    BG = pygame.image.load("assets/menu/Background.png")
     global nom_session, existe_deja, existe_pas
-    input_box = pygame.Rect(100, 100, 140,32)
-    input_box1 = InputBox(100, 100, 140, 32)
-    input_box2 = InputBox(100, 300, 140, 32)
+    MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
+    MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
+    input_box1 = InputBox(100, 220, 200, 32)
+    input_box2 = InputBox(100, 350, 130, 32)
     input_boxes = [input_box1, input_box2]
     done = False
     INSCRIPTION_TEXT = get_font(12).render("S'inscrire", True, "white")
-    INSCRIPTION_RECT = INSCRIPTION_TEXT.get_rect(center=(200, 75))
+    INSCRIPTION_RECT = INSCRIPTION_TEXT.get_rect(center=(200, 190))
     CONNEXION_TEXT = get_font(12).render("Se connecter", True, "white")
-    CONNEXION_RECT = CONNEXION_TEXT.get_rect(center=(200, 275))
+    CONNEXION_RECT = CONNEXION_TEXT.get_rect(center=(200, 320))
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -91,9 +93,10 @@ def session():
 
         for box in input_boxes:
             box.update()
-        screen.fill((30, 30, 30))
+        screen.blit(BG, (0, 0))
         screen.blit(INSCRIPTION_TEXT, INSCRIPTION_RECT)
         screen.blit(CONNEXION_TEXT,CONNEXION_RECT)
+        screen.blit(MENU_TEXT,MENU_RECT)
         for box in input_boxes:
             box.draw(screen)
         
@@ -103,7 +106,7 @@ def session():
             screen.blit(EXISTE_DEJA_TEXT, EXISTE_DEJA_RECT)
         if existe_pas == 1 :
             EXISTE_PAS_TEXT = get_font(10).render("* Ce nom n'existe pas", True, "red")
-            EXISTE_PAS_RECT = EXISTE_PAS_TEXT.get_rect(center=(200, 350))
+            EXISTE_PAS_RECT = EXISTE_PAS_TEXT.get_rect(center=(200, 410))
             screen.blit(EXISTE_PAS_TEXT, EXISTE_PAS_RECT)
 
         pygame.display.flip()
