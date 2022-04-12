@@ -4,6 +4,7 @@ from random import randint
 import sys
 from PIL import Image, ImageFilter
 from pygame.math import Vector2
+import os
 
 
 #Initialisation du jeu#
@@ -32,14 +33,14 @@ buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
 screen = pygame.display.set_mode((400, 600))
 
-with open("initalisation.txt","w") as init :
+with open("initialisation.txt","w") as init :
     init.write("0\n0\n0\n0\n0\n0\n")
     init.close()
-nom_fichier = "initalisation.txt"
+nom_session = "initialisation"
 
 
 def saveread(score):
-    with open(nom_fichier,"r") as fichier:
+    with open(nom_session+'.txt',"r") as fichier:
         list = fichier.readlines()
         fichier.close()
     if score == "bestscore":
@@ -57,7 +58,7 @@ def saveread(score):
 
 def save(score,vol,pos,vol2,pos2):
     bestscore = saveread("bestscore")
-    fichier = open(nom_fichier,"w+")
+    fichier = open(nom_session+'.txt',"w+")
     if score > int(bestscore):
         fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
@@ -70,7 +71,7 @@ def save(score,vol,pos,vol2,pos2):
 
 
 def session():
-    global nom_fichier, existe_deja, existe_pas
+    global nom_session, existe_deja, existe_pas
     input_box = pygame.Rect(100, 100, 140,32)
     input_box1 = InputBox(100, 100, 140, 32)
     input_box2 = InputBox(100, 300, 140, 32)
@@ -88,14 +89,11 @@ def session():
             input_box1.handle_event_1(event)
             input_box2.handle_event_2(event)
 
-
         for box in input_boxes:
             box.update()
-
         screen.fill((30, 30, 30))
         screen.blit(INSCRIPTION_TEXT, INSCRIPTION_RECT)
         screen.blit(CONNEXION_TEXT,CONNEXION_RECT)
-
         for box in input_boxes:
             box.draw(screen)
         
@@ -120,7 +118,7 @@ class InputBox:
 
     
     def handle_event_1(self, event):
-        global existe_deja
+        global existe_deja,nom_session
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
@@ -133,21 +131,21 @@ class InputBox:
         if event.type == pygame.KEYDOWN:
             if self.active:
                 if event.key == pygame.K_RETURN:
-                    nom_fichier = str(self.text) + ".txt"
+                    nom_session = str(self.text).lower()
                     try:
-                        with open(nom_fichier, 'r') as f:
+                        with open(nom_session+'.txt', 'r') as f:
                             existe_deja = 1
                     except FileNotFoundError as e:
-                        nom_fichier = str(self.text)+'.txt'
-                        with open(nom_fichier, 'w+') as f:
+                        with open(nom_session+'.txt', 'w+') as f:
                             f.write("0\n0\n0\n0\n0\n0\n")
                             f.close()
+                        os.remove("initialisation.txt")
                         main_menu()
                     except IOError as e:
-                        nom_fichier = str(self.text)+'.txt'
-                        with open(nom_fichier, 'w+') as f:
+                        with open(nom_session+'.txt', 'w+') as f:
                             f.write("0\n0\n0\n0\n0\n0\n")
                             f.close()
+                        os.remove("initialisation.txt")
                         main_menu()
                     self.text = ''
                 elif event.key == pygame.K_BACKSPACE:
@@ -158,7 +156,7 @@ class InputBox:
                 self.txt_surface = get_font(12).render(self.text, True, self.color)
 
     def handle_event_2(self, event):
-        global existe_pas
+        global existe_pas,nom_session
         if event.type == pygame.MOUSEBUTTONDOWN:
             # If the user clicked on the input_box rect.
             if self.rect.collidepoint(event.pos):
@@ -171,10 +169,11 @@ class InputBox:
         if event.type == pygame.KEYDOWN:
             if self.active:
                 if event.key == pygame.K_RETURN:
-                    nom_fichier = str(self.text) + ".txt"
+                    nom_session = str(self.text).lower()
                     try:
-                        with open(nom_fichier, 'r') as f:
+                        with open(nom_session+'.txt', 'r') as f:
                             main_menu()
+                        os.remove("initialisation.txt")
                     except FileNotFoundError as e:
                         existe_pas = 1
                     except IOError as e:
@@ -495,9 +494,6 @@ class Game:
             self.last_monster = now
 
     
-
-
-
 #Déclaration des variables de son#
 volume = float(saveread("volume"))
 position= int(saveread("position"))
@@ -520,6 +516,9 @@ def options(menu):
         OPTIONS_RECT2 = OPTIONS_TEXT1.get_rect(center=(200,300))
         OPTIONS_POURCENTAGE_FOND_RECT = POURCENTAGE_FOND.get_rect(center=(40, 205))
         OPTIONS_POURCENTAGE_FOND_RECT2 = POURCENTAGE_FOND2.get_rect(center=(40, 355))
+        SESSION_TEXT = get_font(12).render(nom_session, True, "white")
+        SESSION_RECT = SESSION_TEXT.get_rect(bottomleft=(15, 580))
+        screen.blit(SESSION_TEXT,SESSION_RECT)
         screen.blit(OPTIONS_TEXT, OPTIONS_RECT)
         screen.blit(OPTIONS_TEXT1, OPTIONS_RECT1)
         screen.blit(OPTIONS_TEXT2, OPTIONS_RECT2)
@@ -664,6 +663,9 @@ def paused() :
         PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="Reprendre", font=get_font(12), base_color="White", hovering_color="Green")
         OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="Options", font=get_font(12), base_color="White", hovering_color="Green")
         QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), text_input="Menu", font=get_font(12), base_color="White", hovering_color="Green")
+        SESSION_TEXT = get_font(12).render(nom_session, True, "white")
+        SESSION_RECT = SESSION_TEXT.get_rect(bottomleft=(35, 580))
+        screen.blit(SESSION_TEXT,SESSION_RECT)
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
         for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
@@ -728,9 +730,12 @@ def over_menu():
         pygame.display.update()
 
 def main_menu():
+    global nom_session
     mixer.music.load('sounds/01_Title-Screen.wav')
     mixer.music.set_volume(volume)
     mixer.music.play(-1, 0.0, 0)
+    trashimg = pygame.image.load('assets/icon/trash.png')
+    trashimg = pygame.transform.scale(trashimg,(30,30))
     while True:
         BG = pygame.image.load("assets/menu/Background.png")
         best_score = pygame.image.load('assets/icon/best_score.png')
@@ -741,23 +746,24 @@ def main_menu():
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
         MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
-        PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), 
-                            text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
-        OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), 
-                            text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
-        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360), 
-                            text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
+        PLAY_BUTTON = Button(image=buttonimg, pos=(200, 200), text_input="PLAY", font=get_font(12), base_color="White", hovering_color="Green")
+        OPTIONS_BUTTON = Button(image=buttonimg, pos=(200, 280), text_input="OPTIONS", font=get_font(12), base_color="White", hovering_color="Green")
+        QUIT_BUTTON = Button(image=buttonimg, pos=(200, 360),text_input="QUIT", font=get_font(12), base_color="White", hovering_color="Green")
         Best_Score_TEXT = get_font(12).render("Meilleur Score : "+ saveread("bestscore"), True, "white")
         Best_Score_RECT = Best_Score_TEXT.get_rect(topleft=(100, 442))
         Prec_Score_TEXT = get_font(12).render(("Score Précédent : "+ saveread("prec")), True, "white")
         Prec_Score_RECT = Prec_Score_TEXT.get_rect(topleft=(100, 493))
+        SESSION_TEXT = get_font(12).render(nom_session, True, "white")
+        SESSION_RECT = SESSION_TEXT.get_rect(bottomleft=(40, 580))
+        DELETE_BUTTON = Button(image=trashimg, pos=(25, 570), text_input="", font=get_font(12), base_color="White", hovering_color="Green")
         screen.blit(MENU_TEXT, MENU_RECT)
         screen.blit(Best_Score_TEXT, Best_Score_RECT)
         screen.blit(Prec_Score_TEXT, Prec_Score_RECT)
         screen.blit(best_score,(55,438))
         screen.blit(prec_score,(55,488))
+        screen.blit(SESSION_TEXT,SESSION_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, OPTIONS_BUTTON,DELETE_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
         
@@ -773,6 +779,13 @@ def main_menu():
                     jeu()
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options("menu")
+                if DELETE_BUTTON.checkForInput(MENU_MOUSE_POS) :
+                    with open('initialisation.txt',"w") as f:
+                        f.write("0\n0\n0\n0\n0\n0\n")
+                        f.close()
+                    os.remove(nom_session+'.txt')
+                    nom_session = "initialisation"
+                    session()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -816,7 +829,7 @@ def jeu():
     count = 0
     pause = 0
     cost_power=1
-    cost_life=1
+    cost_life=300
     cost_delay=1
     cost_earning=1
     spawn_delay = 20
@@ -900,7 +913,7 @@ def jeu():
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
             VAGUE_MOUSE_POS=pygame.mouse.get_pos()
             POWER_SHOOT_BUTTON = Button(image=buttonimg, pos=(120, 400), text_input="Power Shoot", font=get_font(8), base_color="White", hovering_color=color1)
-            LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upygamerade life", font=get_font(8), base_color="White", hovering_color=color2)
+            LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upgrade life", font=get_font(8), base_color="White", hovering_color=color2)
             SHOOT_DELAY_BUTTON = Button(image=buttonimg, pos=(120, 490), text_input="Shoot delay", font=get_font(8), base_color="White", hovering_color=color3)
             EARNING_BUTTON = Button(image=buttonimg, pos=(290, 490), text_input="Money Value", font=get_font(8), base_color="White", hovering_color=color4)
             screen.blit(money,(50,430))
@@ -1021,7 +1034,6 @@ def jeu():
                         if game.player.money >= cost_life and (game.player.health+15) <= game.player.max_health:
                             game.player.health += 15
                             game.player.money -= cost_life
-                            cost_life*=2
                     if SHOOT_DELAY_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_delay and game.player.shoot_delay >=100:
                             game.player.shoot_delay -= 10
