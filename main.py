@@ -5,10 +5,41 @@ import sys
 from PIL import Image, ImageFilter
 from pygame.math import Vector2
 
-#Fonctions pour la sauvegarde#
+
+#Initialisation du jeu#
+pygame.init()
+pygame.font.init()
+
+# Nom de la fenêtre #
+pygame.display.set_caption("SpaceShoot")
+
+#Définition de la police d'écriture #
+def get_font(size): # Returns Press-Start-2P in the desired size
+    return pygame.font.Font("assets/menu/font.ttf", size)
+
+COLOR_INACTIVE = pygame.Color('lightskyblue3')
+COLOR_ACTIVE = pygame.Color('green')
+
+existe_deja = 0
+existe_pas = 0
+
+#Icone jeu#
+icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
+pygame.display.set_icon(icon)
+
+#Background des boutons#
+buttonimg = pygame.image.load("assets/menu/button.png")
+buttonimg = pygame.transform.scale(buttonimg,(150,50))
+screen = pygame.display.set_mode((400, 600))
+
+with open("initalisation.txt","w") as init :
+    init.write("0\n0\n0\n0\n0\n0\n")
+    init.close()
+nom_fichier = "initalisation.txt"
+
 
 def saveread(score):
-    with open("scores.txt","r") as fichier:
+    with open(nom_fichier,"r") as fichier:
         list = fichier.readlines()
         fichier.close()
     if score == "bestscore":
@@ -26,7 +57,7 @@ def saveread(score):
 
 def save(score,vol,pos,vol2,pos2):
     bestscore = saveread("bestscore")
-    fichier = open("scores.txt","w+")
+    fichier = open(nom_fichier,"w+")
     if score > int(bestscore):
         fichier.write(str(score)+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
@@ -37,6 +68,134 @@ def save(score,vol,pos,vol2,pos2):
         fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
 
+
+def session():
+    global nom_fichier, existe_deja, existe_pas
+    input_box = pygame.Rect(100, 100, 140,32)
+    input_box1 = InputBox(100, 100, 140, 32)
+    input_box2 = InputBox(100, 300, 140, 32)
+    input_boxes = [input_box1, input_box2]
+    done = False
+    INSCRIPTION_TEXT = get_font(12).render("S'inscrire", True, "white")
+    INSCRIPTION_RECT = INSCRIPTION_TEXT.get_rect(center=(200, 75))
+    CONNEXION_TEXT = get_font(12).render("Se connecter", True, "white")
+    CONNEXION_RECT = CONNEXION_TEXT.get_rect(center=(200, 275))
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+            input_box1.handle_event_1(event)
+            input_box2.handle_event_2(event)
+
+
+        for box in input_boxes:
+            box.update()
+
+        screen.fill((30, 30, 30))
+        screen.blit(INSCRIPTION_TEXT, INSCRIPTION_RECT)
+        screen.blit(CONNEXION_TEXT,CONNEXION_RECT)
+
+        for box in input_boxes:
+            box.draw(screen)
+        
+        if existe_deja == 1 :
+            EXISTE_DEJA_TEXT = get_font(10).render("* Ce nom est déjà pris", True, "red")
+            EXISTE_DEJA_RECT = EXISTE_DEJA_TEXT.get_rect(center=(200, 150))
+            screen.blit(EXISTE_DEJA_TEXT, EXISTE_DEJA_RECT)
+        if existe_pas == 1 :
+            EXISTE_PAS_TEXT = get_font(10).render("* Ce nom n'existe pas", True, "red")
+            EXISTE_PAS_RECT = EXISTE_PAS_TEXT.get_rect(center=(200, 350))
+            screen.blit(EXISTE_PAS_TEXT, EXISTE_PAS_RECT)
+
+        pygame.display.flip()
+
+class InputBox:
+    def __init__(self, x, y, w, h, text=''):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = COLOR_INACTIVE
+        self.text = text
+        self.txt_surface = get_font(12).render(text, True, self.color)
+        self.active = False
+
+    
+    def handle_event_1(self, event):
+        global existe_deja
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    nom_fichier = str(self.text) + ".txt"
+                    try:
+                        with open(nom_fichier, 'r') as f:
+                            existe_deja = 1
+                    except FileNotFoundError as e:
+                        nom_fichier = str(self.text)+'.txt'
+                        with open(nom_fichier, 'w+') as f:
+                            f.write("0\n0\n0\n0\n0\n0\n")
+                            f.close()
+                        main_menu()
+                    except IOError as e:
+                        nom_fichier = str(self.text)+'.txt'
+                        with open(nom_fichier, 'w+') as f:
+                            f.write("0\n0\n0\n0\n0\n0\n")
+                            f.close()
+                        main_menu()
+                    self.text = ''
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.txt_surface = get_font(12).render(self.text, True, self.color)
+
+    def handle_event_2(self, event):
+        global existe_pas
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # If the user clicked on the input_box rect.
+            if self.rect.collidepoint(event.pos):
+                # Toggle the active variable.
+                self.active = not self.active
+            else:
+                self.active = False
+            # Change the current color of the input box.
+            self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    nom_fichier = str(self.text) + ".txt"
+                    try:
+                        with open(nom_fichier, 'r') as f:
+                            main_menu()
+                    except FileNotFoundError as e:
+                        existe_pas = 1
+                    except IOError as e:
+                        existe_pas =1
+                    self.text = ''
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    self.text += event.unicode
+                # Re-render the text.
+                self.txt_surface = get_font(12).render(self.text, True, self.color)
+
+    def update(self):
+        # Resize the box if the text is too long.
+        width = max(200, self.txt_surface.get_width()+10)
+        self.rect.w = width
+    def draw(self, screen):
+        # Blit the text.
+        screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+        # Blit the rect.
+        pygame.draw.rect(screen, self.color, self.rect, 2)  
 
 class Button():
     def __init__(self, image, pos, text_input, font, base_color, hovering_color):
@@ -119,8 +278,8 @@ class Monster(pygame.sprite.Sprite):
         self.game = game
         soundObj = pygame.mixer.Sound('sounds/ennemy_explosion.aiff')
         soundObj.set_volume(float(saveread("volume2")))
-        self.health = 30
-        self.max_health = 30
+        self.health = 1000
+        self.max_health = 1000
         self.attack = 10
         self.all_laser = pygame.sprite.Group()
         self.image = pygame.image.load("assets/vaisseaux/ennemies/enemy-01/nomove_1.png")
@@ -159,8 +318,8 @@ class Monster(pygame.sprite.Sprite):
         self.rect.center = self.pos
 
     def HealthUp(self, x) :
-        self.health += x
         self.max_health += x
+        self.health += x
         
 
 #classe projectile de notre vaisseau #
@@ -196,7 +355,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.health = 100
         self.max_health = 100
-        self.attack = 15
+        self.attack = 500
         self.velocity = 440
         self.score = 0
         self.money = 0
@@ -337,26 +496,7 @@ class Game:
 
     
 
-#Initialisation du jeu#
-pygame.init()
-pygame.font.init()
 
-# Nom de la fenêtre #
-pygame.display.set_caption("SpaceShoot")
-
-#Définition de la police d'écriture #
-def get_font(size): # Returns Press-Start-2P in the desired size
-    return pygame.font.Font("assets/menu/font.ttf", size)
-
-
-#Icone jeu#
-icon = pygame.image.load('assets/vaisseaux/player/ship 01/nomove.png')
-pygame.display.set_icon(icon)
-
-#Background des boutons#
-buttonimg = pygame.image.load("assets/menu/button.png")
-buttonimg = pygame.transform.scale(buttonimg,(150,50))
-screen = pygame.display.set_mode((400, 600))
 
 #Déclaration des variables de son#
 volume = float(saveread("volume"))
@@ -421,7 +561,7 @@ def options(menu):
                     if menu == "menu":
                         return 0
                     else :
-                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpygame")
                         screen.blit(BG2, (0, 0))
                         return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -429,7 +569,7 @@ def options(menu):
                     if menu == "menu":
                         return 0
                     else:
-                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpygame")
                         screen.blit(BG2, (0, 0))
                         return 0
 
@@ -679,6 +819,7 @@ def jeu():
     cost_life=1
     cost_delay=1
     cost_earning=1
+    spawn_delay = 20
     last_seconde2 = pygame.time.get_ticks()
     bestscore = int(saveread("bestscore"))
     prec_score = pygame.transform.scale(prec_score,(20,20))
@@ -694,8 +835,6 @@ def jeu():
 
         dt = clock.tick(2000)
         time = dt/1000
-        print(clock.get_fps())
-
         if pause != 1:
             y_background += 0.25
         if y_background < 600 :
@@ -707,11 +846,6 @@ def jeu():
 
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-
-        # for button in [freeze_BUTTON]:
-        #     button.changeColor(MOUSE_POS)
-        #     button.update(screen)
-
         #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
         game.explosion_group.update()
         game.player.all_projectiles.draw(screen)
@@ -723,7 +857,7 @@ def jeu():
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
             soundObj.set_volume(volume)
-            soundObj.play(-1, 0.0, 0)
+            soundObj.play()
             pygame.mixer.music.stop()
             save(game.player.score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
             over_menu()
@@ -766,7 +900,7 @@ def jeu():
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
             VAGUE_MOUSE_POS=pygame.mouse.get_pos()
             POWER_SHOOT_BUTTON = Button(image=buttonimg, pos=(120, 400), text_input="Power Shoot", font=get_font(8), base_color="White", hovering_color=color1)
-            LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upgrade life", font=get_font(8), base_color="White", hovering_color=color2)
+            LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upygamerade life", font=get_font(8), base_color="White", hovering_color=color2)
             SHOOT_DELAY_BUTTON = Button(image=buttonimg, pos=(120, 490), text_input="Shoot delay", font=get_font(8), base_color="White", hovering_color=color3)
             EARNING_BUTTON = Button(image=buttonimg, pos=(290, 490), text_input="Money Value", font=get_font(8), base_color="White", hovering_color=color4)
             screen.blit(money,(50,430))
@@ -809,10 +943,11 @@ def jeu():
                 last_seconde = now
                 vague +=1
                 velocity += 10
-                game.SpawnUp(20)
-                game.monster.attack += 2
-                game.monster.health += 5
-                game.monster.max_health +=5
+                game.SpawnUp(spawn_delay)
+                spawn_delay += 75
+                game.monster.attack += 10
+                game.player.attack -= 100
+
 
         #################################################################################
         # vérifier si le joueur souhaite bouger ou tirer#
@@ -862,11 +997,11 @@ def jeu():
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.pause()
                     score = game.player.score
-                    pygame.image.save(screen,"assets/menu/currentbg.jpg")
-                    OriImage = Image.open('assets/menu/currentbg.jpg')
+                    pygame.image.save(screen,"assets/menu/currentbg.jpygame")
+                    OriImage = Image.open('assets/menu/currentbg.jpygame')
                     blurImage = OriImage.filter(ImageFilter.BLUR)
-                    blurImage.save('assets/menu/blurrybg.jpg')
-                    BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
+                    blurImage.save('assets/menu/blurrybg.jpygame')
+                    BG2 = pygame.image.load('assets/menu/blurrybg.jpygame')
                     screen.blit(BG2, (0, 0))
                     listkeys = [pygame.K_DOWN,pygame.K_UP,pygame.K_RIGHT,pygame.K_SPACE,pygame.K_LEFT,pygame.K_s,pygame.K_z,pygame.K_q,pygame.K_d]
                     for key in listkeys:
@@ -879,7 +1014,7 @@ def jeu():
             if event.type == pygame.MOUSEBUTTONDOWN and count==15 and len(game.all_monsters)==0:
                     if POWER_SHOOT_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_power :
-                            game.player.attack += 5
+                            game.player.attack += 100
                             game.player.money -= cost_power
                             cost_power*=2
                     if LIFE_BUTTON.checkForInput(VAGUE_MOUSE_POS):
@@ -905,4 +1040,4 @@ def jeu():
         #mettre à jour l'écran  #
         pygame.display.update()
 
-main_menu()
+session()
