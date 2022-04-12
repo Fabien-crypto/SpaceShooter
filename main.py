@@ -561,7 +561,7 @@ def options(menu):
                     if menu == "menu":
                         return 0
                     else :
-                        BG2 = pygame.image.load("assets/menu/blurrybg.jpygame")
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
                         screen.blit(BG2, (0, 0))
                         return 0
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -569,7 +569,7 @@ def options(menu):
                     if menu == "menu":
                         return 0
                     else:
-                        BG2 = pygame.image.load("assets/menu/blurrybg.jpygame")
+                        BG2 = pygame.image.load("assets/menu/blurrybg.jpg")
                         screen.blit(BG2, (0, 0))
                         return 0
 
@@ -997,11 +997,11 @@ def jeu():
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.pause()
                     score = game.player.score
-                    pygame.image.save(screen,"assets/menu/currentbg.jpygame")
-                    OriImage = Image.open('assets/menu/currentbg.jpygame')
+                    pygame.image.save(screen,"assets/menu/currentbg.jpg")
+                    OriImage = Image.open('assets/menu/currentbg.jpg')
                     blurImage = OriImage.filter(ImageFilter.BLUR)
-                    blurImage.save('assets/menu/blurrybg.jpygame')
-                    BG2 = pygame.image.load('assets/menu/blurrybg.jpygame')
+                    blurImage.save('assets/menu/blurrybg.jpg')
+                    BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
                     screen.blit(BG2, (0, 0))
                     listkeys = [pygame.K_DOWN,pygame.K_UP,pygame.K_RIGHT,pygame.K_SPACE,pygame.K_LEFT,pygame.K_s,pygame.K_z,pygame.K_q,pygame.K_d]
                     for key in listkeys:
