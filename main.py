@@ -76,7 +76,7 @@ def session():
     MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
     MENU_RECT = MENU_TEXT.get_rect(center=(200, 80))
     input_box1 = InputBox(100, 220, 200, 32)
-    input_box2 = InputBox(100, 350, 130, 32)
+    input_box2 = InputBox(100, 350, 200, 32)
     input_boxes = [input_box1, input_box2]
     done = False
     INSCRIPTION_TEXT = get_font(12).render("S'inscrire", True, "white")
@@ -86,13 +86,13 @@ def session():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                os.remove("initialisation.txt")
                 done = True
 
             input_box1.handle_event_1(event)
             input_box2.handle_event_2(event)
 
-        for box in input_boxes:
-            box.update()
+
         screen.blit(BG, (0, 0))
         screen.blit(INSCRIPTION_TEXT, INSCRIPTION_RECT)
         screen.blit(CONNEXION_TEXT,CONNEXION_RECT)
@@ -154,7 +154,8 @@ class InputBox:
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
-                    self.text += event.unicode
+                    if len(self.text)<16:
+                        self.text += event.unicode
                 # Re-render the text.
                 self.txt_surface = get_font(12).render(self.text, True, self.color)
 
@@ -175,8 +176,8 @@ class InputBox:
                     nom_session = str(self.text).lower()
                     try:
                         with open(nom_session+'.txt', 'r') as f:
+                            os.remove("initialisation.txt")
                             main_menu()
-                        os.remove("initialisation.txt")
                     except FileNotFoundError as e:
                         existe_pas = 1
                     except IOError as e:
@@ -185,14 +186,11 @@ class InputBox:
                 elif event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]
                 else:
-                    self.text += event.unicode
+                    if len(self.text)<16:
+                        self.text += event.unicode
                 # Re-render the text.
                 self.txt_surface = get_font(12).render(self.text, True, self.color)
 
-    def update(self):
-        # Resize the box if the text is too long.
-        width = max(200, self.txt_surface.get_width()+10)
-        self.rect.w = width
     def draw(self, screen):
         # Blit the text.
         screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
