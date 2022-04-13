@@ -755,7 +755,7 @@ def main_menu():
         Prec_Score_TEXT = get_font(12).render(("Score Précédent : "+ saveread("prec")), True, "white")
         Prec_Score_RECT = Prec_Score_TEXT.get_rect(topleft=(100, 493))
         SESSION_TEXT = get_font(12).render(nom_session, True, "white")
-        SESSION_RECT = SESSION_TEXT.get_rect(bottomleft=(40, 580))
+        SESSION_RECT = SESSION_TEXT.get_rect(bottomleft=(45, 578))
         DELETE_BUTTON = Button(image=trashimg, pos=(25, 570), text_input="", font=get_font(12), base_color="White", hovering_color="Green")
         screen.blit(MENU_TEXT, MENU_RECT)
         screen.blit(Best_Score_TEXT, Best_Score_RECT)
@@ -783,8 +783,6 @@ def main_menu():
                 if DELETE_BUTTON.checkForInput(MENU_MOUSE_POS) :
                     with open('initialisation.txt',"w") as f:
                         f.write("0\n0\n0\n0\n0\n0\n")
-                        f.close()
-                    os.remove(nom_session+'.txt')
                     nom_session = "initialisation"
                     session()
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -849,6 +847,9 @@ def jeu():
 
         dt = clock.tick(2000)
         time = dt/1000
+
+        print(clock.get_fps())
+
         if pause != 1:
             y_background += 0.25
         if y_background < 600 :
@@ -893,8 +894,7 @@ def jeu():
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
         screen.blit(Money_TEXT, Money_RECT)
-        
-        #récupérer tout les projectiles du joueur #
+
         for projectile in game.player.all_projectiles :
             projectile.move(time)
 
@@ -909,6 +909,19 @@ def jeu():
         elif count<15 and pause == 0:
             game.spawn_monster()
         elif count==15 and len(game.all_monsters)==0:
+            COUT_POWER_TEXT = get_font(10).render((str(cost_power)), True, color1 )
+            COUT_POWER_RECT = COUT_POWER_TEXT.get_rect(topleft=(120,436 ))
+            COUT_LIFE_TEXT = get_font(10).render((str(cost_life)), True, color2 )
+            COUT_LIFE_RECT = COUT_LIFE_TEXT.get_rect(topleft=(290,436 ))
+            COUT_DELAY_TEXT = get_font(10).render((str(cost_delay)), True, color3 )
+            COUT_DELAY_RECT = COUT_DELAY_TEXT.get_rect(topleft=(120,525 ))
+            COUT_EARNING_TEXT = get_font(10).render((str(cost_earning)), True, color4 )
+            COUT_EARNING_RECT = COUT_EARNING_TEXT.get_rect(topleft=(290,525 ))
+            screen.blit(COUT_POWER_TEXT, COUT_POWER_RECT)
+            screen.blit(COUT_LIFE_TEXT, COUT_LIFE_RECT)
+            screen.blit(COUT_DELAY_TEXT, COUT_DELAY_RECT)
+            screen.blit(COUT_EARNING_TEXT, COUT_EARNING_RECT)        
+
             VagueFinish_TEXT = get_font(20).render(("Vague "+str(vague)+" Terminée"), True, "White" )
             VagueFinish_RECT = VagueFinish_TEXT.get_rect(center=(200,300 ))
             screen.blit(VagueFinish_TEXT, VagueFinish_RECT)
@@ -917,25 +930,18 @@ def jeu():
             LIFE_BUTTON = Button(image=buttonimg, pos=(290, 400), text_input="Upgrade life", font=get_font(8), base_color="White", hovering_color=color2)
             SHOOT_DELAY_BUTTON = Button(image=buttonimg, pos=(120, 490), text_input="Shoot delay", font=get_font(8), base_color="White", hovering_color=color3)
             EARNING_BUTTON = Button(image=buttonimg, pos=(290, 490), text_input="Money Value", font=get_font(8), base_color="White", hovering_color=color4)
-            screen.blit(money,(50,430))
-            screen.blit(money,(50,520))
-            screen.blit(money,(220,430))
-            screen.blit(money,(220,520))
-            COUT_POWER_TEXT = get_font(10).render(("Cout: "+str(cost_power)), True, color1 )
-            COUT_POWER_RECT = COUT_POWER_TEXT.get_rect(center=(110,440 ))
-            COUT_LIFE_TEXT = get_font(10).render(("Cout: "+str(cost_life)), True, color2 )
-            COUT_LIFE_RECT = COUT_LIFE_TEXT.get_rect(center=(280,440 ))
-            COUT_DELAY_TEXT = get_font(10).render(("Cout: "+str(cost_delay)), True, color3 )
-            COUT_DELAY_RECT = COUT_DELAY_TEXT.get_rect(center=(110,530 ))
-            COUT_EARNING_TEXT = get_font(10).render(("Cout: "+str(cost_earning)), True, color4 )
-            COUT_EARNING_RECT = COUT_EARNING_TEXT.get_rect(center=(280,530 ))
-            screen.blit(COUT_POWER_TEXT, COUT_POWER_RECT)
-            screen.blit(COUT_LIFE_TEXT, COUT_LIFE_RECT)
-            screen.blit(COUT_DELAY_TEXT, COUT_DELAY_RECT)
-            screen.blit(COUT_EARNING_TEXT, COUT_EARNING_RECT)
+            screen.blit(money,(93,430))
+            screen.blit(money,(93,520))
+            screen.blit(money,(263,430))
+            screen.blit(money,(263,520))                  
+            
             for button in [POWER_SHOOT_BUTTON,LIFE_BUTTON,SHOOT_DELAY_BUTTON,EARNING_BUTTON]:
-                button.changeColor(VAGUE_MOUSE_POS)
-                button.update(screen)   
+                    button.changeColor(VAGUE_MOUSE_POS)
+                    button.update(screen)   
+
+            #récupérer tout les projectiles du joueur #
+
+  
             if game.player.money >= cost_power :
                 color1="Green"
             if game.player.money < cost_power :
