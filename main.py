@@ -70,7 +70,7 @@ def save(score,vol,pos,vol2,pos2):
         fichier.close()
 
 
-def session():
+def session(nom):
     BG = pygame.image.load("assets/menu/Background.png")
     global nom_session, existe_deja, existe_pas
     MENU_TEXT = get_font(23).render("SpaceShooter", True, "#b68f40")
@@ -83,10 +83,17 @@ def session():
     INSCRIPTION_RECT = INSCRIPTION_TEXT.get_rect(center=(200, 190))
     CONNEXION_TEXT = get_font(12).render("Se connecter", True, "white")
     CONNEXION_RECT = CONNEXION_TEXT.get_rect(center=(200, 320))
+    try :
+        os.remove(nom+'.txt')
+    except OSError:
+        pass
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 os.remove("initialisation.txt")
+                pygame.quit()
+                sys.exit()
                 done = True
 
             input_box1.handle_event_1(event)
@@ -781,10 +788,12 @@ def main_menu():
                 if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
                     options("menu")
                 if DELETE_BUTTON.checkForInput(MENU_MOUSE_POS) :
-                    with open('initialisation.txt',"w") as f:
+                    nom = str(nom_session)
+                    with open('initialisation.txt',"w+") as f:
                         f.write("0\n0\n0\n0\n0\n0\n")
-                    nom_session = "initialisation"
-                    session()
+                        f.close()
+                    nom_session = 'initialisation.txt'
+                    session(nom)
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -1059,4 +1068,4 @@ def jeu():
         #mettre à jour l'écran  #
         pygame.display.update()
 
-session()
+session('test.txt')
