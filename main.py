@@ -86,7 +86,6 @@ def session():
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                os.remove("initialisation.txt")
                 done = True
 
             input_box1.handle_event_1(event)
@@ -494,16 +493,15 @@ class Game:
             self.all_monsters.add(monster)
             self.last_monster = now
 
-    
-#Déclaration des variables de son#
-volume = float(saveread("volume"))
-position= int(saveread("position"))
-position2= int(saveread("position2"))
-volume2 = float(saveread("volume2"))
 
 def options(menu):
     global volume,volume2
     global position,position2
+    #Déclaration des variables de son#
+    volume = float(saveread("volume"))
+    position= int(saveread("position"))
+    position2= int(saveread("position2"))
+    volume2 = float(saveread("volume2"))
     while True:
         OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
         screen.fill("black")
@@ -732,8 +730,8 @@ def over_menu():
 
 def main_menu():
     global nom_session
-    mixer.music.load('sounds/01_Title-Screen.wav')
-    mixer.music.set_volume(volume)
+    mixer.music.load('sounds/01_Title-Screen.wav')    
+    mixer.music.set_volume(float(saveread("volume")))
     mixer.music.play(-1, 0.0, 0)
     trashimg = pygame.image.load('assets/icon/trash.png')
     trashimg = pygame.transform.scale(trashimg,(30,30))
@@ -799,6 +797,7 @@ def jeu():
     #Musique de fond#    
     mixer.music.load('sounds/10 Drummed vaus.mp3')
     mixer.music.play(-1, 0.0, 0)
+    volume = float(saveread("volume"))
 
     #Temps du jeu #
     clock = pygame.time.Clock()
