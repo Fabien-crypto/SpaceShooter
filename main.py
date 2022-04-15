@@ -144,13 +144,13 @@ class InputBox:
                             existe_deja = 1
                     except FileNotFoundError as e:
                         with open(nom_session+'.txt', 'w+') as f:
-                            f.write("0\n0\n0\n0\n0\n0\n")
+                            f.write("0\n0\n0.5\n250\n0.5\n250\n")
                             f.close()
                         os.remove("initialisation.txt")
                         main_menu()
                     except IOError as e:
                         with open(nom_session+'.txt', 'w+') as f:
-                            f.write("0\n0\n0\n0\n0\n0\n")
+                            f.write("0\n0\n0.5\n250\n0.5\n250\n")
                             f.close()
                         os.remove("initialisation.txt")
                         main_menu()
