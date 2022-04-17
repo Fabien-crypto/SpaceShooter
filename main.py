@@ -21,6 +21,7 @@ def get_font(size): # Returns Press-Start-2P in the desired size
 COLOR_INACTIVE = pygame.Color('lightskyblue3')
 COLOR_ACTIVE = pygame.Color('green')
 
+#On créer deux variables qui sont soit vrai soit fausses et qui sont utilisées dans la fonction session() pour indiquer au joueur si la session n'existe pas ou si elle existe déjà
 existe_deja = 0
 existe_pas = 0
 
@@ -33,12 +34,13 @@ buttonimg = pygame.image.load("assets/menu/button.png")
 buttonimg = pygame.transform.scale(buttonimg,(150,50))
 screen = pygame.display.set_mode((400, 600))
 
+#On créer un fichier initialisation.txt avant que la fonction session() soit lancée pour que le jeu ne crash pas en indiquant que le fichier nom_session.txt n'existe pas car nom_session n'a pas été définit
 with open("initialisation.txt","w") as init :
     init.write("0\n0\n0\n0\n0\n0\n")
     init.close()
 nom_session = "initialisation"
 
-
+# Fonction permettant de lire les données sauvegardées dans un fichier
 def saveread(score):
     with open(nom_session+'.txt',"r") as fichier:
         list = fichier.readlines()
@@ -56,6 +58,7 @@ def saveread(score):
     else:
         return list[1].replace("\n","")
 
+# Fonction permettant de sauvegarder les données tels que le volume du jeu, le meilleur score, le score dans un fichier
 def save(score,vol,pos,vol2,pos2):
     bestscore = saveread("bestscore")
     fichier = open(nom_session+'.txt',"w+")
@@ -69,7 +72,7 @@ def save(score,vol,pos,vol2,pos2):
         fichier.write(bestscore+"\n"+str(score)+"\n"+str(vol)+"\n"+str(pos)+"\n"+str(vol2)+"\n"+str(pos2))
         fichier.close()
 
-
+# Fonction de connexion et d'inscription du joueur
 def session(nom):
     BG = pygame.image.load("assets/menu/Background.png")
     global nom_session, existe_deja, existe_pas
@@ -123,7 +126,7 @@ class InputBox:
         self.txt_surface = get_font(12).render(text, True, self.color)
         self.active = False
 
-    
+    # fonction du champ de texte d'inscription 
     def handle_event_1(self, event):
         global existe_deja,nom_session
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -162,7 +165,7 @@ class InputBox:
                         self.text += event.unicode
                 # Re-render the text.
                 self.txt_surface = get_font(12).render(self.text, True, self.color)
-
+    # Fonction du champ de texte de connexion
     def handle_event_2(self, event):
         global existe_pas,nom_session
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -178,10 +181,15 @@ class InputBox:
             if self.active:
                 if event.key == pygame.K_RETURN:
                     nom_session = str(self.text).lower()
+                    # On teste d'ouvrir un fichier comprenant le nom qu'a rentré l'utilisateur pour se connecter#
+
+                    # S'il y arrive alors le fichier existe bien, il rentre dans le jeu
                     try:
                         with open(nom_session+'.txt', 'r') as f:
                             os.remove("initialisation.txt")
                             main_menu()
+
+                    #Sinon on affiche un texte pour indiquer au joueur que cette session n'existe pas
                     except FileNotFoundError as e:
                         existe_pas = 1
                     except IOError as e:
@@ -201,6 +209,7 @@ class InputBox:
         # Blit the rect.
         pygame.draw.rect(screen, self.color, self.rect, 2)  
 
+# On créer une classe bouton qu'on utilise dans les différents menus
 class Button():
     def __init__(self, image, pos, text_input, font, base_color, hovering_color):
         self.image = image
@@ -231,6 +240,7 @@ class Button():
         else:
             self.text = self.font.render(self.text_input, True, self.base_color)
 
+# On créer une classe explosion qui affiche une animation d'explosion lorsqu'un monstre est tué
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, x, y, size):
         pygame.sprite.Sprite.__init__(self)
@@ -251,7 +261,7 @@ class Explosion(pygame.sprite.Sprite):
         self.rect.center = [x, y]
         self.counter = 0
 
-
+    # Fonction permettant de changer les images pour créer l'animation d'explosion
     def update(self):
         explosion_speed = 3
         #update explosion animation
@@ -264,9 +274,6 @@ class Explosion(pygame.sprite.Sprite):
         if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
             self.kill()
 
-
-    def remove(self):
-        self.monster.all_laser.remove(self)
     #classe mouvement du laser #
     def move(self, time):
         self.rect.y += self.velocity * time
@@ -274,7 +281,6 @@ class Explosion(pygame.sprite.Sprite):
             self.remove()
 
 #Classe du monstre#s
-
 class Monster(pygame.sprite.Sprite):
     def __init__(self, game):
         global soundObj 
@@ -292,7 +298,8 @@ class Monster(pygame.sprite.Sprite):
         self.delay = 90
         self.pos = Vector2(randint(15,360),-10)
         self.velocity = 90
- 
+
+    #On eneleve de la vie au monstre et on verifie s'il lui en reste. S'il lui en reste pas on affiche l'animation d'explosion avec le son d'explosion, on incremente le score du joueur et fait apparaitre une pièce
     def damage(self, amount) :            
         self.health -= amount
         if self.health <= 0:
@@ -304,6 +311,7 @@ class Monster(pygame.sprite.Sprite):
             self.game.all_monsters.remove(self)
             self.game.player.score += 5
 
+    #On Fait avancer les monstres en fonction de leur vitesse définit et si le monstre dépasse l'écran on le détruit pour ne pas ralentir le jeu
     def forward(self, time, velocity):
         self.pos += Vector2(0,velocity) * time
         self.rect.center = self.pos
@@ -314,13 +322,14 @@ class Monster(pygame.sprite.Sprite):
             self.game.all_monsters.remove(self)
             self.game.player.damage(self.attack)
 
-
+    # Fonction utilisée dans les vagues pour rajouter de la difficulté en diminuant le delai de spawn et en augmentant ainsi le nbr de monstres par vagues.
     def velocityUp(self, x) :
         self.velocity += x
 
+    # Fonction qui arrete le déplacement des monstres
     def freeze(self):
         self.rect.center = self.pos
-
+    # Fonction utilisée dans les vagues pour rajouter de la difficulté en augmentant la vie des monstres
     def HealthUp(self, x) :
         self.max_health += x
         self.health += x
@@ -824,9 +833,9 @@ def jeu():
     money = pygame.image.load('assets/coin/coin_01.png')
     # Boucle jeu #
     running = True
-    velocity = game.monster.velocity
 
-    #Vague d'ennemis#
+    #définition des variables qui concernent les vagues d'ennemis#
+    velocity = game.monster.velocity
     vague = 1
     pause = 0
     last_seconde = pygame.time.get_ticks()
@@ -849,13 +858,12 @@ def jeu():
     value = 1
 
     while running :
-        #appliquer arrière plan et défilement#
 
+        #appliquer arrière plan et défilement#
         dt = clock.tick(2000)
         time = dt/1000
 
-        print(clock.get_fps())
-
+        # Si le jeu n'est pas en pause on fait défiler le fond d'écran verticalement#
         if pause != 1:
             y_background += 0.25
         if y_background < 600 :
@@ -867,7 +875,8 @@ def jeu():
 
         #Appliquer image de notre joueur#
         screen.blit(game.player.image, game.player.rect)
-        #Appliquer l'ensemble de mon grp de projectiles en les dessinant#
+
+        #Appliquer l'ensemble de mon grp de projectiles, de joueur, de monstres et de pièces en les dessinant#
         game.explosion_group.update()
         game.player.all_projectiles.draw(screen)
         game.all_monsters.draw(screen)
@@ -875,6 +884,7 @@ def jeu():
         game.all_coin.update()
         game.all_coin.draw(screen)
 
+        # Si le joueur n'a plus de vie, on joue la musique et le menu Game Over#
         if game.player.health <= 0:
             soundObj = pygame.mixer.Sound('sounds/game_over.wav')
             soundObj.set_volume(volume)
@@ -892,28 +902,35 @@ def jeu():
         Vague_TEXT = get_font(13).render(("Vague "+str(vague)), True, "White" )
         Vague_RECT = Vague_TEXT.get_rect(bottomright=(380, 590))
         
+        #Si le joueur dépasse son ancien meilleur score, le texte du meilleur score s'affiche en rouge pour lui indiquer#
         if game.player.score > bestscore:
             color="Red"
 
+        # On affiche les icons de meilleur score et de score avec leur textes respectifs#
         screen.blit(prec_score,(20,15))
         screen.blit(money,(20,45))
         screen.blit(Score_TEXT, Score_RECT)
         screen.blit(Vague_TEXT, Vague_RECT)
         screen.blit(Money_TEXT, Money_RECT)
 
+        # On fait avancer tout les projectiles#
         for projectile in game.player.all_projectiles :
             projectile.move(time)
 
+        #On actualise la barre de vie du joueur#
         game.player.update_health_bar(screen)
         #################################################################################
         ################################# VAGUE ENNEMIS #################################
         #################################################################################
         now = pygame.time.get_ticks()
+        # Si le compteur de secondes est inférieur a 15 on l'incrémente de 1 chaque secondes#
         if (now - last_seconde > delai) and count<15 :
             count +=1 
             last_seconde = now
+        # Tant que les 15 secondes ne sont pas finis on fait spawn des monstres#
         elif count<15 and pause == 0:
             game.spawn_monster()
+        #Si les 15 secondes sont terminées et qu'il n'y a plus de monstres alors on affiche le menu de vague terminée
         elif count==15 and len(game.all_monsters)==0:
             COUT_POWER_TEXT = get_font(10).render((str(cost_power)), True, color1 )
             COUT_POWER_RECT = COUT_POWER_TEXT.get_rect(topleft=(120,436 ))
@@ -945,9 +962,7 @@ def jeu():
                     button.changeColor(VAGUE_MOUSE_POS)
                     button.update(screen)   
 
-            #récupérer tout les projectiles du joueur #
-
-  
+            # On définit les conditions pour afficher en vert ou en rouge les boutons en fonction du nombre de pièces suffisantes qu'a le joueur
             if game.player.money >= cost_power :
                 color1="Green"
             if game.player.money < cost_power :
@@ -964,6 +979,7 @@ def jeu():
                 color4="Green"
             if game.player.money < cost_earning:
                 color4 = "Red"   
+            # Si les 15 secondes sont passées on rénitialise le compteur de secondes à 0, on incrémente le compteur de vague de 1 et on augmente les paramètres de difficultés#
             if now - last_seconde > 15000:
                 count = 0
                 last_seconde = now
@@ -997,17 +1013,19 @@ def jeu():
         elif (game.player.rect.x) < -(game.player.rect.width) :
             game.player.rect.x = screen.get_width()
 
+        # Si le jeu n'est pas en pause on fait avancer les pièces sinon on les arrête avec la fonction freeze
         for coin in game.all_coin :
             if pause == 0:
                 coin.forward(time, velocity)
             else:
                 coin.freeze()
+        # Si le jeu n'est pas en pause on fait avancer les monstres sinon on les arrête avec la fonction freeze
         for monster in game.all_monsters :
             if pause == 0:
                 monster.forward(time,velocity)
             else:
                 monster.freeze()
-
+        # On définit constamment la valeur des pièces
         for coin in game.all_coin :
             coin.value = value
         #fermeture du jeu#
@@ -1018,8 +1036,10 @@ def jeu():
                 save(score,saveread("volume"),saveread("position"),saveread("volume2"),saveread("position2"))
                 pygame.quit()
                 sys.exit()
+            # On créer un évènement permettant de détecter si une fonction est enfoncée et d'effectuer une action plusieurs fois tant que la touche est enfoncée
             elif event.type == pygame.KEYDOWN :
                 game.pressed[event.key]=True
+                # SI le joeuur appuie sur la touche échape alors on lance le menu jeu, on mets en pause la musique et on mets le fond de jeu en flou#
                 if event.key==pygame.K_ESCAPE:
                     mixer.music.pause()
                     score = game.player.score
@@ -1030,28 +1050,35 @@ def jeu():
                     BG2 = pygame.image.load('assets/menu/blurrybg.jpg')
                     screen.blit(BG2, (0, 0))
                     listkeys = [pygame.K_DOWN,pygame.K_UP,pygame.K_RIGHT,pygame.K_SPACE,pygame.K_LEFT,pygame.K_s,pygame.K_z,pygame.K_q,pygame.K_d]
+                    # On mets la valeur de "touche enfoncée" sur pause pour régler un bug qui laissait le joueur bouger même si le menu pause est lancé
                     for key in listkeys:
                         game.pressed[key] = False
                     pause = 1
                     paused()
                     last_seconde2 = pygame.time.get_ticks()
+            # Détection si le joueur relache une touche qu'il avait enfoncé
             if event.type == pygame.KEYUP :
                 game.pressed[event.key] = False
+            # Détection des clics de la souris du joueur lorsqu'il a le menu d'amélioration d'affiché entre deux vagues 
             if event.type == pygame.MOUSEBUTTONDOWN and count==15 and len(game.all_monsters)==0:
+                    #Si le joueur appui sur le bouton amélioration de la puissance de tir alors :
                     if POWER_SHOOT_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_power :
                             game.player.attack += 100
                             game.player.money -= cost_power
                             cost_power*=2
+                    #Si le joueur appui sur le bouton amélioration de la vie alors :
                     if LIFE_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_life and (game.player.health+15) <= game.player.max_health:
                             game.player.health += 15
                             game.player.money -= cost_life
+                    #Si le joueur appui sur le bouton de réduction de delai de tir alors :
                     if SHOOT_DELAY_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_delay and game.player.shoot_delay >=100:
                             game.player.shoot_delay -= 10
                             game.player.money -= cost_delay
                             cost_delay*=2
+                    #Si le joueur appui sur le bouton amélioration de la valeur des pièces alors :
                     if EARNING_BUTTON.checkForInput(VAGUE_MOUSE_POS):
                         if game.player.money >= cost_earning :
                             value +=1
